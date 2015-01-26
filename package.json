@@ -1,0 +1,30 @@
+{
+  "name": "gulp-override",
+  "version": "",
+  "description": "",
+  "main": "index.js",
+  "keywords": [
+    "gulp",
+    "gulpplugin"
+  ],
+  "files": [
+    "index.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "glob": "^4.3.5",
+    "minimatch": "^2.0.1",
+    "through2": "^0.6.3",
+    "underscore": "^1.7.0"
+  },
+  "engine": "node >= 0.10"
+}
