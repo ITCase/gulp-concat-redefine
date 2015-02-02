@@ -1,14 +1,14 @@
 {
-  "name": "gulp-override",
+  "name": "example",
   "version": "",
   "description": "",
-  "main": "index.js",
+  "main": "run_me.js",
   "keywords": [
     "gulp",
     "gulpplugin"
   ],
   "files": [
-    "index.js"
+    "run_me.js"
   ],
   "repository": {
     "type": "git",
@@ -19,13 +19,9 @@
   "bugs": {
     "url": "https://github.com/"
   },
-  "devDependencies": {},
-  "dependencies": {
-    "minimatch": "^2.0.1",
-    "through2": "^0.6.3",
-    "underscore": "^1.7.0",
-    "gulp-util": "~3.0.2",
-    "globby": "~1.1.0"
+  "devDependencies": {
+    "gulp": "^3.8.10"
   },
+  "dependencies": {},
   "engine": "node >= 0.10"
 }
