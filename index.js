@@ -3,113 +3,93 @@
 //     source = require('vinyl-source-stream'),
 //     vinylPaths = require('vinyl-paths');
 
-var _ = require("underscore");
-var globby = require("globby");
-var minimatch = require("minimatch");
+// var _ = require("underscore");
+// var through = require('through2');
 var path = require('path');
-var through = require('through2');
+var globby = require("globby");
 var gutil = require('gulp-util');
 var PluginError = gutil.PluginError;
 
-
-// Consts
 var PLUGIN_NAME = 'gulp-override';
 
-// function gulp_override (options) {
-//     options = options || {};
 
-//     return through.obj(function (file, enc, cb) {
-//         // Find folders in project apps and static paths
-//         var filepath = file.path;
-//         var cwd = file.cwd;
-//         var relative = path.relative(cwd, filepath);
-
-//         var appList = globby.sync(relative + '/*/');
-//         var list = [];
-
-//         appList.forEach(function(folder) {
-//             appName = folder.match(/.+\/(.+)\/$/)[1];
-//             list.push(appName);
-//         });
-
-//         list = _.uniq(list);
-
-//     }, function (cb) {
-//         cb();
-//     });
-// }
+var GulpOverride = function (options) {
+    if (!options.directories) {
+        throw new PluginError(PLUGIN_NAME, 'Missing "directories" argument!');
+    }
+    if (!options.type) {
+        throw new PluginError(PLUGIN_NAME, 'Missing "type" argument!');
+    }
+    if (!(this instanceof GulpOverride)) {
+        return new GulpOverride(options);
+    }
+    this.options = options;
+    this.files = {};
+};
 
 
-function clean_files(files_list) {
+GulpOverride.prototype._clean_files = function(files_list, app_name) {
     return files_list.map(function (path) {
         var path_list = path.split('/');
-        return path_list[path_list.length-1];
+        return app_name + '/' + path_list[path_list.length-1];
     });
-}
+};
 
-function get_files(main_directory, directories, type) {
+
+GulpOverride.prototype.get_files = function() {
     // var files_pattern = '**/*.' + options.type;
     // var ignore_pattern = '**/'+ options.ignore + '/';
     // return globby.sync([folder + files_pattern,
     //                     '!' + folder + ignore_pattern + files_pattern]);
 
-    var files = [];
-    var files_pattern = '**/*.' + type;
-    globby.sync(main_directory + '/*/').forEach(function(folder) {
-        var appName = folder.match(/.+\/(.+)\/$/)[1] + '/';
-        var main_files = globby.sync([folder + files_pattern]);
-        var check_list = clean_files(main_files);
+    var files = {};
+    var check_list = [];
+    var files_pattern = '/**/*.' + this.options.type;
+    var directories = this.options.directories;
+    var self = this;
 
-        files.push.apply(files, main_files);
-
-        for (var i in directories) {
+    for (var i in directories) {
+        globby.sync(directories[i] + '/*/').forEach(function(folder) {
+            var appName = folder.match(/.+\/(.+)\/$/)[1];
             var module_files = globby.sync([directories[i] + appName + files_pattern]);
-            var clean_module_files = clean_files(module_files);
+            var clean_module_files = self._clean_files(module_files, appName);
+
+            if(!(appName in files)){
+                files[appName] = [];
+            }
 
             for (var j in clean_module_files) {
                 if (check_list.indexOf(clean_module_files[j]) < 0) {
-                    files.push(module_files[j]);
+                    files[appName].push(module_files[j]);
                     check_list.push(clean_module_files[j]);
                 }
             }
-        }
-    });
-    return files;
-}
-
-// Plugin level function(dealing with files)
-function gulp_override(options) {
-    options = options || {};
-
-    if (!options.directories) {
-        throw new PluginError(PLUGIN_NAME, 'Missing directories argument!');
+        });
     }
 
-    // Creating a stream through which each file will pass
-    return through.obj(function(file, enc, cb) {
-        var filepath = file.path;
-        var cwd = file.cwd;
-        var relative = path.relative(cwd, filepath);
+    console.log('========');
+    console.log(files);
+    console.log();
+    this.files = files;
+    return files;
+};
 
-        // if (file.isNull()) {
-        //     cb(null, file);  // return empty file
-        // }
-        // if (file.isBuffer() || file.isStream()) {
-        //     throw new PluginError(PLUGIN_NAME, 'Wrong format');
-        // }
 
-        var res = get_files(relative, options.directories, options.type);
-        console.log('========');
-        console.log(res);
-        console.log();
-        // **
-        // * create __some_app.css
-        // **
-        cb(null, file);
-    }, function (cb) {
-        cb();
-    });
-}
+GulpOverride.prototype.get_dest = function(key) {
+    // this.options.directories[0] + key + '/' + this.options.type + '/';
+    if (key === undefined) {
+        throw new PluginError(PLUGIN_NAME, 'Missing "key" argument!');
+    }
+    return './tst_res/' + key + '/' + this.options.type + '/';
+};
 
-// Exporting the plugin main function
-module.exports = gulp_override;
+
+GulpOverride.prototype.get_target = function(key) {
+    if (key === undefined) {
+        throw new PluginError(PLUGIN_NAME, 'Missing "key" argument!');
+    }
+    return '__' + key + '.' + this.options.type;
+};
+
+
+module.exports = GulpOverride;
