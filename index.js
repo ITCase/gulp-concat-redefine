@@ -24,7 +24,9 @@ var GulpOverride = function (options) {
         return new GulpOverride(options);
     }
     this.options = options;
+    this.prefix = '__';
     this.files = {};
+    this.check_list = [];
 };
 
 
@@ -36,51 +38,60 @@ GulpOverride.prototype._clean_files = function(files_list, app_name) {
 };
 
 
-GulpOverride.prototype.get_files = function() {
-    // var files_pattern = '**/*.' + options.type;
-    // var ignore_pattern = '**/'+ options.ignore + '/';
-    // return globby.sync([folder + files_pattern,
-    //                     '!' + folder + ignore_pattern + files_pattern]);
-
-    var files = {};
-    var check_list = [];
-    var files_pattern = '/**/*.' + this.options.type;
-    var directories = this.options.directories;
+// Make function without loop
+GulpOverride.prototype._get_files = function(dir) {
     var self = this;
+    var files_pattern = '/**/*.' + self.options.type;
+    var ignore_pattern = '/**/' + this.prefix + '*.*';
 
-    for (var i in directories) {
-        globby.sync(directories[i] + '/*/').forEach(function(folder) {
-            var appName = folder.match(/.+\/(.+)\/$/)[1];
-            var module_files = globby.sync([directories[i] + appName + files_pattern]);
-            var clean_module_files = self._clean_files(module_files, appName);
+    globby.sync(dir + '/*/').forEach(function(folder) {
+        var appName = folder.match(/.+\/(.+)\/$/)[1];
+        var module_files = globby.sync([dir + appName + files_pattern,
+                                        '!' + dir + appName + ignore_pattern]);
+        var clean_module_files = self._clean_files(module_files, appName);
 
-            if(!(appName in files)){
-                files[appName] = [];
+        if(!(appName in self.files)){
+            self.files[appName] = [];
+        }
+
+        for (var j in clean_module_files) {
+            if (self.check_list.indexOf(clean_module_files[j]) < 0) {
+                self.files[appName].push(module_files[j]);
+                self.check_list.push(clean_module_files[j]);
             }
+        }
+    });
+};
 
-            for (var j in clean_module_files) {
-                if (check_list.indexOf(clean_module_files[j]) < 0) {
-                    files[appName].push(module_files[j]);
-                    check_list.push(clean_module_files[j]);
-                }
-            }
-        });
-    }
 
-    console.log('========');
-    console.log(files);
-    console.log();
-    this.files = files;
-    return files;
+GulpOverride.prototype.get_files = function() {
+    var dirs = this.options.directories;
+    for (var i in dirs) this._get_files(dirs[i]);
+    this.check_list = [];
+    return this.files;
 };
 
 
 GulpOverride.prototype.get_dest = function(key) {
-    // this.options.directories[0] + key + '/' + this.options.type + '/';
     if (key === undefined) {
         throw new PluginError(PLUGIN_NAME, 'Missing "key" argument!');
     }
-    return './tst_res/' + key + '/' + this.options.type + '/';
+    var app_files = this.files[key];
+    var dest = this.options.directories[0];
+    var type = this.options.type;
+
+    if (app_files.length) {
+        var dest_dir = app_files[0].split('/');
+        if (dest_dir.indexOf(type) + 1) {
+            while (type != dest_dir[dest_dir.length-1]) {
+                dest_dir.pop();
+            }
+            dest = dest_dir.join('/') + '/';
+        } else {
+            dest = dest + key + '/' + type + '/';
+        }
+    }
+    return dest;
 };
 
 
@@ -88,7 +99,7 @@ GulpOverride.prototype.get_target = function(key) {
     if (key === undefined) {
         throw new PluginError(PLUGIN_NAME, 'Missing "key" argument!');
     }
-    return '__' + key + '.' + this.options.type;
+    return this.prefix + key + '.' + this.options.type;
 };
 
 
