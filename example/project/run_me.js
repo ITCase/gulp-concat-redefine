@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
-var gulpOverride = require('../../index.js');
+var gulpOverride = require('../../index.js');  // 'gulp-override'
 // var tap = require('gulp-tap');
 // var map = require('vinyl-map');
 
@@ -8,11 +8,16 @@ var options = {
         // priority == sort
         directories: ['./static/', './apps/', '../itcase-dev/'],
         type: 'css'  // js
+        // modules_dir: '../itcase-dev/',
+        // ignore_dirs: ['node_modules', 'bower_components', 'some_dir_name'],
+        // ignore_modules: ['some_dir_name'],
+        // target_prefix = 'proj_'
     };
+
 var go = new gulpOverride(options);
 var apps_files = go.get_files();
 
-console.log('====');
+console.log('\n ===========');
 console.log(apps_files);
 console.log();
 
