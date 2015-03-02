@@ -136,13 +136,13 @@ Type: `String` or `Array` Default: `null`
 ## API
 
 ### `get_files(app_name)`
-* **dest** - `string` Path to destination directory or file.
+* **app_name** - `string` 
 
 ### `get_dest(app_name)`
-* **dest** - `string` Path to destination directory or file.
+* **app_name** - `string` 
 
 ### `get_target(app_name)`
-* **dest** - `string` Path to destination directory or file.
+* **app_name** - `string` 
 
 ## License
 
