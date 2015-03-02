@@ -42,6 +42,41 @@ gulp.task('default', function () {
 });
 ```
 
+### Result
+```js
+.
+├── example
+|   ├── static
+|       ├── some_app1
+|           ├── __some_app1.css // include static/some_app1/some_app1_file1.css, static/some_app1/some_app1_file1.css, modules/some_app1_file3.css
+|           ├── some_app1_file1.css
+|           └── some_app1_file2.css
+|       └── some_app3
+|           ├── __some_app3.css // include static/some_app3_file1.css, static/some_app3_file2.css
+|           ├── some_app3_file1.css
+|           └── some_app3_file2.css
+|   ├── app
+|       ├── some_app2
+|           ├── __some_app2.css // include app/some_app2_file1.css, app/some_app2_file2.css, modules/some_app2_file3.css
+|           ├── some_app2_file1.css
+|           └── some_app2_file2.css
+|       └── some_app5
+|           ├── __some_app5.css // include app/some_app5_file1.css, app/some_app5_file2.css
+|           ├── some_app5_file1.css
+|           └── some_app5_file2.css
+|   └── modules
+|       ├── some_app1
+|           ├── some_app1_file1.css
+|           ├── some_app1_file2.css
+|           └── some_app1_file3.css
+|       └── some_app2
+|           └── some_app2_file3.css
+|       └── some_app6
+|           ├── __some_app6.css // include modules/some_app6_file1.css
+|           └── some_app6_file1.css
+```
+
+
 ## Options
 
 ### directories
