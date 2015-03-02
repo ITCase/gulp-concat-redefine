@@ -43,8 +43,8 @@ gulp.task('default', function () {
 ```
 
 ### Result
-```js
-.
+```bash
+
 ├── example
 |   ├── static
 |       ├── some_app1
