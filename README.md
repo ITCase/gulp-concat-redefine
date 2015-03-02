@@ -115,15 +115,34 @@ Type: `Array` Default: `null`
 
 ### modules_dir
 
-Type: `String` Default: `null`
+Type: `Array` Default: `null`
+
+### ignore_dirs
+
+Type: `String` Default: ['node_modules', 'bower_components']
 
 ### ignore_modules
 
 Type: `String` or `Array` Default: `null`
 
+###target_prefix
+
+Type: `String` Default: `__`
+
 ### type
 
 Type: `String` or `Array` Default: `null`
+
+## API
+
+### `get_files(app_name)`
+* **dest** - `string` Path to destination directory or file.
+
+### `get_dest(app_name)`
+* **dest** - `string` Path to destination directory or file.
+
+### `get_target(app_name)`
+* **dest** - `string` Path to destination directory or file.
 
 ## License
 
