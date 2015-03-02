@@ -27,6 +27,7 @@ gulp.task('default', function () {
         directories: [
             './static/',
             './app/',
+            './modules/',
         ],
         type: 'css'
     };
@@ -42,9 +43,38 @@ gulp.task('default', function () {
 });
 ```
 
-### Result
-```bash
+#### File structure
+```js
+.
+├── example
+|   ├── static
+|       ├── some_app1
+|           ├── some_app1_file1.css
+|           └── some_app1_file2.css
+|       └── some_app3
+|           ├── some_app3_file1.css
+|           └── some_app3_file2.css
+|   ├── app
+|       ├── some_app2
+|           ├── some_app2_file1.css
+|           └── some_app2_file2.css
+|       └── some_app5
+|           ├── some_app5_file1.css
+|           └── some_app5_file2.css
+|   └── modules
+|       ├── some_app1
+|           ├── some_app1_file1.css
+|           ├── some_app1_file2.css
+|           └── some_app1_file3.css
+|       └── some_app2
+|           └── some_app2_file3.css
+|       └── some_app6
+|           └── some_app6_file1.css
+```
 
+#### Result
+```js
+.
 ├── example
 |   ├── static
 |       ├── some_app1
