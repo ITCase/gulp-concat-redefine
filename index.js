@@ -37,8 +37,8 @@ var GulpOverride = function (options) {
 
 GulpOverride.prototype._clean_files = function(files_list, app_name) {
     return files_list.map(function (file_path) {
-        var path_list = file_path.split(path.sep);
-        return app_name + path.sep + path_list[path_list.length-1];
+        var path_list = file_path.split('/');
+        return app_name + '/' + path_list[path_list.length-1];
     });
 };
 
@@ -102,12 +102,12 @@ GulpOverride.prototype.get_dest = function(key) {
     var type = this.options.type;
 
     if (app_files.length) {
-        var dest_dir = app_files[0].split(path.sep);
+        var dest_dir = app_files[0].split('/');
         if (dest_dir.indexOf(type) + 1) {
             while (type != dest_dir[dest_dir.length-1]) dest_dir.pop();
-            dest = dest_dir.join(path.sep) + path.sep;
+            dest = dest_dir.join('/') + '/';
         } else {
-            dest = dest + key + path.sep + type + path.sep;
+            dest = dest + key + '/' + type + '/';
         }
     }
     return dest;
