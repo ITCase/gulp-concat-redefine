@@ -10,6 +10,9 @@
   "files": [
     "index.js"
   ],
+  "scripts": {
+     "test": "./node_modules/.bin/testem"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/"
