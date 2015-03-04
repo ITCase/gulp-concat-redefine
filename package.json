@@ -22,7 +22,10 @@
   "bugs": {
     "url": "https://github.com/"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "*",
+    "mocha": "*"
+  },
   "dependencies": {
     "gulp-util": "~3.0.2",
     "globby": "~1.1.0"

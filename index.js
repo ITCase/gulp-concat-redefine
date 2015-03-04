@@ -1,10 +1,3 @@
-// var buffer = require('vinyl-buffer'),
-//     map = require('vinyl-map'),
-//     source = require('vinyl-source-stream'),
-//     vinylPaths = require('vinyl-paths');
-
-// var _ = require("underscore");
-// var through = require('through2');
 var path = require('path');
 var globby = require("globby");
 var gutil = require('gulp-util');
