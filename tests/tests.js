@@ -56,8 +56,25 @@ describe('Check get_files', function(){
             fs.exists(path, function (exists) {
                 expect(exists).to.be.true;
             });
-            break;
         }
-        // etc...
+    });
+});
+
+
+describe('Check get_target', function(){
+
+    it('Set concat target', function(){
+        var files_obj = go.get_files();
+        files_obj.should.be.a('object');
+        files_obj.should.equal(go.files);
+        for(var app_name in files_obj) {
+            var target_obj = go.get_target(app_name);
+            target_obj.should.be.a('string');
+            app_name.should.be.a('string');
+            go.options.type.should.be.a('string');
+            go.options.type.should.equal('css');
+            go.options.target_prefix.should.equal('__');
+            var target_file = go.options.target_prefix + app_name + '.' + go.options.type;
+        }
     });
 });
