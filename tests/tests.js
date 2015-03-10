@@ -23,6 +23,8 @@ var go = new gulpOverride(options);
 describe('Test object options', function(){
     it('Check options', function(){
         go.should.have.property('options').that.is.a('object');
+        go.should.have.property('modules_list').that.is.a('array');
+        go.should.have.property('files').that.is.a('object');
         go.options.should.have.property('directories').that.is.a('array');
         go.options.should.have.property('modules_dir').that.is.a('string');
         go.options.should.have.property('ignore_modules').that.is.a('array');
@@ -30,11 +32,11 @@ describe('Test object options', function(){
         go.options.should.have.property('ignore_dirs').that.is.a('array');
         go.options.should.have.property('target_prefix').that.is.a('string');
     });
-    it('Check modules_list option', function(){
-        go.should.have.property('modules_list').that.is.a('array');
-    });
-    it('Check files', function(){
-        go.should.have.property('files').that.is.a('object');
+
+    it('Check methods', function(){
+        expect(go).to.respondTo('get_files');
+        expect(go).to.respondTo('get_dest');
+        expect(go).to.respondTo('get_target');
     });
 });
 
@@ -62,19 +64,17 @@ describe('Test get_files', function(){
 
 describe('Test get_dest', function(){
     it('Check method options', function(){
-        var key = 'some_app1',
-            app_files = go.files[key],
-            dest = go.options.directories[0],
-            type = go.options.type;
+        var key = 'some_app1'
+        app_files = go.files[key],
+        dest = go.options.directories,
+        type = go.options.type;
 
         app_files.should.be.a('array');
-        dest.should.be.a('string');
-        dest.should.be.a('string');
-
-        app_files.should.be.to.have.length(7);
+        app_files.should.be.to.have.length.of.at.least(0);
+        dest.should.be.a('array');
+        type.should.be.a('string');
 
         console.error(app_files);
-
     });
     it('Get concat dir', function(){
         for(var app_name in go.get_files()) {
