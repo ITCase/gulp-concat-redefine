@@ -20,8 +20,8 @@ var options = {
 
 var go = new gulpOverride(options);
 
-describe('Check object options', function(){
-    it('Check gulp-concat-redefine options', function(){
+describe('Test object options', function(){
+    it('Check options', function(){
         go.should.have.property('options').that.is.a('object');
         go.options.should.have.property('directories').that.is.a('array');
         go.options.should.have.property('modules_dir').that.is.a('string');
@@ -30,10 +30,10 @@ describe('Check object options', function(){
         go.options.should.have.property('ignore_dirs').that.is.a('array');
         go.options.should.have.property('target_prefix').that.is.a('string');
     });
-    it('Check gulp-concat-redefine modules_list', function(){
+    it('Check modules_list option', function(){
         go.should.have.property('modules_list').that.is.a('array');
     });
-    it('Check gulp-concat-redefine files', function(){
+    it('Check files', function(){
         go.should.have.property('files').that.is.a('object');
     });
 });
@@ -44,7 +44,7 @@ describe('Check get_files', function(){
     });
 });
 
-describe('Check get_files', function(){
+describe('Test get_files', function(){
     it('Get directories list', function(){
         var files_obj = go.get_files();
         expect(files_obj).to.be.a('object');
@@ -60,20 +60,33 @@ describe('Check get_files', function(){
     });
 });
 
+describe('Test get_dest', function(){
+    it('Check method options', function(){
+        var key = 'some_app1',
+            app_files = go.files[key],
+            dest = go.options.directories[0],
+            type = go.options.type;
 
-describe('Check get_target', function(){
+        app_files.should.be.a('array');
+        dest.should.be.a('string');
+        dest.should.be.a('string');
 
-    it('Set concat target', function(){
-        var files_obj = go.get_files();
-        files_obj.should.be.a('object');
-        files_obj.should.equal(go.files);
-        for(var app_name in files_obj) {
-            var target_obj = go.get_target(app_name);
-            target_obj.should.be.a('string');
-            app_name.should.be.a('string');
-            go.options.type.should.be.a('string');
-            go.options.type.should.equal('css');
-            go.options.target_prefix.should.equal('__');
+        app_files.should.be.to.have.length(7);
+
+        console.error(app_files);
+
+    });
+    it('Get concat dir', function(){
+        for(var app_name in go.get_files()) {
+            go.get_dest(app_name).should.be.a('string');
+        }
+    });
+});
+
+describe('Test get_target', function(){
+    it('Get target file', function(){
+        for(var app_name in go.get_files()) {
+            go.get_target(app_name).should.be.a('string');
             var target_file = go.options.target_prefix + app_name + '.' + go.options.type;
         }
     });
