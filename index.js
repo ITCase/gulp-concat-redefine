@@ -94,11 +94,8 @@ GulpOverride.prototype.get_dest = function(key) {
     var dest = this.options.directories[0];
     var type = this.options.type;
 
-    console.error(dest);
-
     if (app_files.length) {
         var dest_dir = app_files[0].split('/');
-        console.error(dest_dir);
         if (dest_dir.indexOf(type) + 1) {
             while (type != dest_dir[dest_dir.length-1]) dest_dir.pop();
             dest = dest_dir.join('/') + '/';

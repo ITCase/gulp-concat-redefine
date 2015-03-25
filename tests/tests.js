@@ -15,7 +15,8 @@ var options = {
     ],
     modules_dir: 'itcase-dev',
     ignore_dir: ['ignore-directory'],
-    type: 'css'
+    type: 'css',
+    target_prefix: '__'
 };
 
 var go = new gulpOverride(options);
@@ -108,7 +109,7 @@ describe('Check get_dest', function(){
     it('Set concat target', function(){
         for(var app_name in go.get_files()) {
             go.get_target(app_name).should.be.a('string');
-            var target_file = go.options.target_prefix + app_name + '.' + go.options.type;
+            var target = go.options.target_prefix + app_name + '.' + go.options.type;
         }
     });
 });
@@ -125,8 +126,9 @@ describe('Test get_dest', function(){
 describe('Test get_target', function(){
     it('Get target file', function(){
         for(var app_name in go.get_files()) {
+            app_name.should.be.a('string');
             go.get_target(app_name).should.be.a('string');
-            var target_file = go.get_target(app_name);
+            expect(go.get_target(app_name)).to.contain(go.options.target_prefix, app_name);
         }
     });
 });
