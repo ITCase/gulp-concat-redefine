@@ -18,8 +18,8 @@ var GulpOverride = function (options) {
         return new GulpOverride(options);
     }
 
-    if (!options.ignore_dirs) options.ignore_dirs = ['node_modules', 'bower_components'];
-    if (!options.ignore_modules) options.ignore_modules = [];
+    if (!options.ignore_default) options.ignore_default = ['node_modules', 'bower_components'];
+    if (!options.ignore_dir) options.ignore_dir = [];
     if (!options.target_prefix) options.target_prefix = '__';
 
     this.options = options;
@@ -40,14 +40,14 @@ GulpOverride.prototype._clean_files = function(files_list, app_name) {
 GulpOverride.prototype._get_files = function(dir, get_modules) {
     var self = this;
     var type = self.options.type;
-    var ignore_dirs = self.options.ignore_dirs;
+    var ignore_default = self.options.ignore_default;
     var files_pattern = '/**/*.' + type;
     var ignore_pattern = '/**/' + this.options.target_prefix + '*.*';
 
     globby.sync(dir + '/*/').forEach(function(folder) {
         var appName = folder.match(/.+\/(.+)\/$/)[1];
         var pattern = [dir+appName+files_pattern, '!'+dir+appName+ignore_pattern];
-        for (var i in ignore_dirs) pattern.push('!'+dir+'**/'+ignore_dirs[i]+'/**');
+        for (var i in ignore_default) pattern.push('!'+dir+'**/'+ignore_default[i]+'/**');
         var module_files = globby.sync(pattern);
         var clean_module_files = self._clean_files(module_files, appName);
 
@@ -64,7 +64,7 @@ GulpOverride.prototype._get_files = function(dir, get_modules) {
         if (get_modules) {
             globby.sync(self.options.modules_dir + '/*/').forEach(function(folder) {
                 var moduleName = folder.match(/.+\/(.+)\/$/)[1];
-                if (self.options.ignore_modules.indexOf(moduleName) + 1) return;
+                if (self.options.ignore_dir.indexOf(moduleName) + 1) return;
                 if (moduleName.indexOf(appName) + 1 && self.modules_list.indexOf(folder) < 0) {
                     self.modules_list.push(folder);
                 }
@@ -94,8 +94,11 @@ GulpOverride.prototype.get_dest = function(key) {
     var dest = this.options.directories[0];
     var type = this.options.type;
 
+    console.error(dest);
+
     if (app_files.length) {
         var dest_dir = app_files[0].split('/');
+        console.error(dest_dir);
         if (dest_dir.indexOf(type) + 1) {
             while (type != dest_dir[dest_dir.length-1]) dest_dir.pop();
             dest = dest_dir.join('/') + '/';
