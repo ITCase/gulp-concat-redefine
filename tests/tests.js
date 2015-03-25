@@ -104,6 +104,15 @@ describe('Test get_files', function(){
     });
 });
 
+describe('Check get_dest', function(){
+    it('Set concat target', function(){
+        for(var app_name in go.get_files()) {
+            go.get_target(app_name).should.be.a('string');
+            var target_file = go.options.target_prefix + app_name + '.' + go.options.type;
+        }
+    });
+});
+
 describe('Test get_dest', function(){
     it('Get concat dir', function(){
         for(var app_name in go.get_files()) {
