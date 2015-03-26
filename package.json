@@ -1,7 +1,12 @@
 {
-  "name": "gulp-override",
-  "version": "",
-  "description": "",
+  "name": "gulp-concat-redefine",
+  "version": "0.0.1",
+  "description": "GulpJS plugin to find redefined files in directories and concat in one",
+  "author": "ITCase <info@itcase.pro>",
+  "maintainers": [
+    "Nikita Shalakov <ggift@mail.ru>",
+    "Arkadiy Zamaraev <arkadiy@bk.ru>"
+  ],
   "main": "index.js",
   "keywords": [
     "gulp",
@@ -11,24 +16,24 @@
     "index.js"
   ],
   "scripts": {
-     "test": "./node_modules/.bin/testem"
+    "test": "./node_modules/.bin/testem"
   },
+  "homepage": "https://github.com/ITCase/gulp-concat-redefine",
   "repository": {
     "type": "git",
-    "url": "git://github.com/"
+    "url": "git://github.com/ITCase/gulp-concat-redefine.git"
   },
-  "author": "",
-  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/"
-  },
-  "devDependencies": {
-    "chai": "*",
-    "mocha": "*"
+    "url": "https://github.com/ITCase/gulp-concat-redefine/issues"
   },
   "dependencies": {
-    "gulp-util": "~3.0.2",
-    "globby": "~1.1.0"
+    "gulp-util": "^3.0.2",
+    "globby": "^1.1.0"
   },
+  "devDependencies": {
+    "chai": "^2.1.2",
+    "mocha": "^2.2.1"
+  },
+  "license": "MIT",
   "engine": "node >= 0.10"
 }
