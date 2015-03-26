@@ -1,21 +1,22 @@
-var path = require('path');
-var globby = require("globby");
-var gutil = require('gulp-util');
-var PluginError = gutil.PluginError;
+'use strict';
 
-var PLUGIN_NAME = 'gulp-override';
+var path = require('path'),
+    globby = require("globby"),
+    gutil = require('gulp-util'),
+    PluginError = gutil.PluginError;
+
+var PLUGIN_NAME = 'gulp-concat-redefine';
 var check_list = [];
 
-
-var GulpOverride = function (options) {
+var ConcatRedefine = function (options) {
     if (!options.directories) {
         throw new PluginError(PLUGIN_NAME, 'Missing "directories" argument!');
     }
     if (!options.type) {
         throw new PluginError(PLUGIN_NAME, 'Missing "type" argument!');
     }
-    if (!(this instanceof GulpOverride)) {
-        return new GulpOverride(options);
+    if (!(this instanceof ConcatRedefine)) {
+        return new ConcatRedefine(options);
     }
 
     if (!options.ignore_default) options.ignore_default = ['node_modules', 'bower_components'];
@@ -28,7 +29,7 @@ var GulpOverride = function (options) {
 };
 
 
-GulpOverride.prototype._clean_files = function(files_list, app_name) {
+ConcatRedefine.prototype._clean_files = function(files_list, app_name) {
     return files_list.map(function (file_path) {
         var path_list = file_path.split('/');
         return app_name + '/' + path_list[path_list.length-1];
@@ -37,7 +38,7 @@ GulpOverride.prototype._clean_files = function(files_list, app_name) {
 
 
 // Make function without loop
-GulpOverride.prototype._get_files = function(dir, get_modules) {
+ConcatRedefine.prototype._get_files = function(dir, get_modules) {
     var self = this;
     var type = self.options.type;
     var ignore_default = self.options.ignore_default;
@@ -61,6 +62,7 @@ GulpOverride.prototype._get_files = function(dir, get_modules) {
                 check_list.push(clean_module_files[i]);
             }
         }
+
         if (get_modules) {
             globby.sync(self.options.modules_dir + '/*/').forEach(function(folder) {
                 var moduleName = folder.match(/.+\/(.+)\/$/)[1];
@@ -74,7 +76,7 @@ GulpOverride.prototype._get_files = function(dir, get_modules) {
 };
 
 
-GulpOverride.prototype.get_files = function() {
+ConcatRedefine.prototype.get_files = function() {
     // from main dirs
     var dirs = this.options.directories;
     for (var i in dirs) this._get_files(dirs[i], true);
@@ -86,16 +88,16 @@ GulpOverride.prototype.get_files = function() {
 };
 
 
-GulpOverride.prototype.get_dest = function(key) {
+ConcatRedefine.prototype.get_dest = function(key) {
     if (key === undefined) {
         throw new PluginError(PLUGIN_NAME, 'Missing "key" argument!');
     }
-    var app_files = this.files[key];
+    var files = this.files[key];
     var dest = this.options.directories[0];
     var type = this.options.type;
 
-    if (app_files.length) {
-        var dest_dir = app_files[0].split('/');
+    if (files.length) {
+        var dest_dir = files[0].split('/');
         if (dest_dir.indexOf(type) + 1) {
             while (type != dest_dir[dest_dir.length-1]) dest_dir.pop();
             dest = dest_dir.join('/') + '/';
@@ -107,7 +109,7 @@ GulpOverride.prototype.get_dest = function(key) {
 };
 
 
-GulpOverride.prototype.get_target = function(key) {
+ConcatRedefine.prototype.get_target = function(key) {
     if (key === undefined) {
         throw new PluginError(PLUGIN_NAME, 'Missing "key" argument!');
     }
@@ -115,4 +117,4 @@ GulpOverride.prototype.get_target = function(key) {
 };
 
 
-module.exports = GulpOverride;
+module.exports = ConcatRedefine;
