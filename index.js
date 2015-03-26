@@ -43,11 +43,12 @@ ConcatRedefine.prototype._get_files = function(dir, get_modules) {
     var type = self.options.type;
     var ignore_default = self.options.ignore_default;
     var files_pattern = '/**/*.' + type;
-    var ignore_pattern = '/**/' + this.options.target_prefix + '*.*';
+    var ignore_pattern = '/**/' + this.options.target_prefix;
 
     globby.sync(dir + '/*/').forEach(function(folder) {
         var appName = folder.match(/.+\/(.+)\/$/)[1];
-        var pattern = [dir+appName+files_pattern, '!'+dir+appName+ignore_pattern];
+        var pattern = [ dir+appName+files_pattern,
+                        '!'+dir+appName+ignore_pattern+appName+ '.*'];
         for (var i in ignore_default) pattern.push('!'+dir+'**/'+ignore_default[i]+'/**');
         var module_files = globby.sync(pattern);
         var clean_module_files = self._clean_files(module_files, appName);
