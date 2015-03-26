@@ -1,6 +1,6 @@
 {
-  "name": "gulp-override",
-  "version": "",
+  "name": "gulp-concat-redefine",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "keywords": [
@@ -11,7 +11,7 @@
     "index.js"
   ],
   "scripts": {
-     "test": "./node_modules/.bin/testem"
+    "test": "./node_modules/.bin/testem"
   },
   "repository": {
     "type": "git",
@@ -23,12 +23,12 @@
     "url": "https://github.com/"
   },
   "devDependencies": {
-    "chai": "*",
-    "mocha": "*"
+    "chai": "^2.1.2",
+    "mocha": "^2.2.1"
   },
   "dependencies": {
-    "gulp-util": "~3.0.2",
-    "globby": "~1.1.0"
+    "gulp-util": "^3.0.2",
+    "globby": "^1.1.0"
   },
   "engine": "node >= 0.10"
 }

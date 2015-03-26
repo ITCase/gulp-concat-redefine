@@ -4,12 +4,12 @@
 		"selected_items":
 		[
 			[
-				"con",
-				"console"
+				"dir",
+				"directory"
 			],
 			[
-				"dir",
-				"directories"
+				"con",
+				"console"
 			],
 			[
 				"z",
@@ -243,7 +243,7 @@
 			"file": "index.js",
 			"settings":
 			{
-				"buffer_size": 3877,
+				"buffer_size": 3902,
 				"line_ending": "Windows"
 			}
 		},
@@ -251,7 +251,7 @@
 			"file": "tests/tests.js",
 			"settings":
 			{
-				"buffer_size": 4696,
+				"buffer_size": 5359,
 				"line_ending": "Windows"
 			}
 		}
@@ -264,7 +264,7 @@
 		[
 			[
 				"pack",
-				"Package Control: Install Package"
+				"Package Control: Remove Package"
 			],
 			[
 				"pakc",
@@ -476,14 +476,14 @@
 	},
 	"file_history":
 	[
+		"/F/ITCase/gulp-override/testem.yml",
+		"/F/ITCase/gulp-override/package.json",
 		"/F/Sublime Text 2/Data/Packages/sublime-jslint/sublime-jslint.sublime-settings",
 		"/F/Sublime Text 2/Data/Packages/User/sublime-jslint.sublime-settings",
 		"/F/Sublime Text 2/Data/Packages/SublimeLinter/SublimeLinter.sublime-settings",
-		"/F/ITCase/gulp-override/testem.yml",
 		"/F/Sublime Text 2/Data/Packages/Default/Preferences.sublime-settings",
 		"/F/ITCase/mc-angio/gulpfile.js",
 		"/F/ITCase/gulp-override/tests/fixtures/static/app2/app2_file3.css",
-		"/F/ITCase/gulp-override/package.json",
 		"/F/ITCase/gulp-override/tests/tests.js",
 		"/F/ITCase/gulp-override/index.js",
 		"/F/ITCase/gulp-override/tests/fixtures/static/app1/app1_file3.css",
@@ -624,6 +624,13 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"_get_files",
+			"files_pattern",
+			"options",
+			"GulpOverride",
+			"GulpConc",
+			"GulpOverride",
+			"gulpOverride",
 			"save",
 			"gulp-override",
 			"app_files",
@@ -744,14 +751,7 @@
 			"b-button__bg",
 			"Нельзя заказать больше, чем осталось!",
 			"Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI",
-			"PD94bWwgdmVyc2lvbj0iMS4wIiA",
-			"b-clear-after",
-			"Обратный звонок",
-			"b-clear-after",
-			"banner__",
-			"banner__item",
-			"b-banner",
-			"b-banners"
+			"PD94bWwgdmVyc2lvbj0iMS4wIiA"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -782,15 +782,15 @@
 					"file": "index.js",
 					"settings":
 					{
-						"buffer_size": 3877,
+						"buffer_size": 3902,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								222,
-								222
+								369,
+								369
 							]
 						],
 						"settings":
@@ -938,7 +938,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 164.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -954,15 +954,15 @@
 					"file": "tests/tests.js",
 					"settings":
 					{
-						"buffer_size": 4696,
+						"buffer_size": 5359,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4127,
-								4127
+								370,
+								370
 							]
 						],
 						"settings":
@@ -1110,7 +1110,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 286.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1151,7 +1151,7 @@
 		"rows":
 		[
 			0.0,
-			0.447968576208,
+			0.664287575219,
 			1.0
 		]
 	},
@@ -1166,7 +1166,7 @@
 	},
 	"output.jslint_result_view":
 	{
-		"height": 257.0
+		"height": 131.0
 	},
 	"replace":
 	{
