@@ -10,6 +10,7 @@ A [Gulp](http://gulpjs.com/) plugin for finding redefined application files and 
 $ npm install --save-dev gulp-concat-redefine
 ```
 
+[![Foo](docs/app1.png)](http://google.com.au/)
 
 ## Usage
 
