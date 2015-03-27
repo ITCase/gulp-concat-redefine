@@ -13,12 +13,10 @@ $ npm install --save-dev gulp-concat-redefine
 
 ## Usage
 
-### Simple
-
 ```js
 var gulp = require('gulp');
 var concat = require('gulp-concat');
-var gulp-concat-redefine = require('gulp-concat-redefine');
+var concat-redefine = require('gulp-concat-redefine');
 
 gulp.task('default', function () {
 
@@ -43,11 +41,14 @@ gulp.task('default', function () {
 });
 ```
 
+
 ## Options
 
 ### directories
 
 Type: `Array` Default: `null`
+
+List of directories to search for files
 
 ### modules_dir
 
@@ -57,6 +58,8 @@ Type: `Array` Default: `null`
 
 Type: `String` Default: ['node_modules', 'bower_components']
 
+List of directories that should be ignored
+
 ### ignore_modules
 
 Type: `String` or `Array` Default: `null`
@@ -65,9 +68,25 @@ Type: `String` or `Array` Default: `null`
 
 Type: `String` Default: `__`
 
+Returns file named: `__appname`
+
 ### type
 
 Type: `String` or `Array` Default: `null`
+
+#### Example
+
+```js
+    var options = {
+        directories: [
+            './static/',
+            './app/',
+            './modules/',
+        ],
+        type: 'css'
+    };
+```
+
 
 ## API
 
