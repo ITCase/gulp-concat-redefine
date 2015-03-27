@@ -10,7 +10,11 @@ A [Gulp](http://gulpjs.com/) plugin for finding redefined application files and 
 $ npm install --save-dev gulp-concat-redefine
 ```
 
-[![Foo](docs/app1.png)](http://google.com.au/)
+## How it work
+
+`gulp-concat-redefine` search redefined files from `directories`, then compares it and create one file from redefined files.
+
+![How it work](docs/app1.png)
 
 ## Usage
 
@@ -22,26 +26,24 @@ var concat-redefine = require('gulp-concat-redefine');
 gulp.task('default', function () {
 
     var options = {
-        // priority == sort
-        directories: [
-            './static/',
-            './app/',
-            './modules/',
-        ],
+        directories: {
+            ['./static/', '1'],
+            ['./app/', '2'],
+            ['./modules/', '3']
+        },
         type: 'css'
     };
 
     var concateRedefine = new concatRedefine(options);
-    var apps_files = concateRedefine.get_files();
+    var files = concateRedefine.get_files();
 
-    for (var app_name in apps_files) {
-        return gulp.src(apps_files[app_name])
-            .pipe(concat(concateRedefine.get_target(app_name)))
-            .pipe(gulp.dest(concateRedefine.get_dest(app_name)));
+    for (var app in files) {
+        return gulp.src(files[app])
+            .pipe(concat(concateRedefine.get_target(app)))
+            .pipe(gulp.dest(concateRedefine.get_dest(app)));
     }
 });
 ```
-
 
 ## Options
 
@@ -51,6 +53,12 @@ Type: `Array` Default: `null`
 
 List of directories to search for files
 
+#### Example: 
+```js
+     directories: {
+          ['./static/', '1'] 
+     }
+```
 ### modules_dir
 
 Type: `Array` Default: `null`
@@ -69,25 +77,20 @@ Type: `String` or `Array` Default: `null`
 
 Type: `String` Default: `__`
 
-Returns file named: `__appname`
+```js
+     target_prefix: '__bunde__' 
+     type: 'css' 
+```
+> Returns file named: `__bunde__app-name.css`
 
 ### type
 
 Type: `String` or `Array` Default: `null`
 
-#### Example
-
+#### Example: 
 ```js
-    var options = {
-        directories: [
-            './static/',
-            './app/',
-            './modules/',
-        ],
-        type: 'css'
-    };
+     type: ['css', 'js'] 
 ```
-
 
 ## API
 
