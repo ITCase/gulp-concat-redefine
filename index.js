@@ -20,7 +20,7 @@ var ConcatRedefine = function (options) {
     }
 
     if (!options.ignore_default) options.ignore_default = ['node_modules', 'bower_components'];
-    if (!options.ignore_dir) options.ignore_dir = [];
+    if (!options.ignore_modules) options.ignore_modules = [];
     if (!options.target_prefix) options.target_prefix = '__';
 
     this.options = options;
@@ -43,12 +43,11 @@ ConcatRedefine.prototype._get_files = function(dir, get_modules) {
     var type = self.options.type;
     var ignore_default = self.options.ignore_default;
     var files_pattern = '/**/*.' + type;
-    var ignore_pattern = '/**/' + this.options.target_prefix;
+    var ignore_pattern = '/**/' + this.options.target_prefix + '*.*';
 
     globby.sync(dir + '/*/').forEach(function(folder) {
         var appName = folder.match(/.+\/(.+)\/$/)[1];
-        var pattern = [ dir+appName+files_pattern,
-                        '!'+dir+appName+ignore_pattern+appName+ '.*'];
+        var pattern = [dir + appName + files_pattern, '!' + dir + appName + ignore_pattern];
         for (var i in ignore_default) pattern.push('!'+dir+'**/'+ignore_default[i]+'/**');
         var module_files = globby.sync(pattern);
         var clean_module_files = self._clean_files(module_files, appName);
@@ -67,7 +66,7 @@ ConcatRedefine.prototype._get_files = function(dir, get_modules) {
         if (get_modules) {
             globby.sync(self.options.modules_dir + '/*/').forEach(function(folder) {
                 var moduleName = folder.match(/.+\/(.+)\/$/)[1];
-                if (self.options.ignore_dir.indexOf(moduleName) + 1) return;
+                if (self.options.ignore_modules.indexOf(moduleName) + 1) return;
                 if (moduleName.indexOf(appName) + 1 && self.modules_list.indexOf(folder) < 0) {
                     self.modules_list.push(folder);
                 }
@@ -89,12 +88,20 @@ ConcatRedefine.prototype.get_files = function() {
 };
 
 
+ConcatRedefine.prototype._get_default_dest = function(dirs, first_file) {
+    for (var i in dirs) {
+        if (first_file.indexOf(dirs[i]) >= 0) return dirs[i];
+        else if (first_file.indexOf(this.options.modules_dir) >= 0) return this.options.modules_dir;
+    }
+    return dirs[0];
+};
+
 ConcatRedefine.prototype.get_dest = function(key) {
     if (key === undefined) {
         throw new PluginError(PLUGIN_NAME, 'Missing "key" argument!');
     }
     var files = this.files[key];
-    var dest = this.options.directories[0];
+    var dest = this._get_default_dest(this.options.directories, files[0]);
     var type = this.options.type;
 
     if (files.length) {
@@ -103,7 +110,7 @@ ConcatRedefine.prototype.get_dest = function(key) {
             while (type != dest_dir[dest_dir.length-1]) dest_dir.pop();
             dest = dest_dir.join('/') + '/';
         } else {
-            dest = dest + key + '/' + type + '/';
+            dest = dest + key + '/'; // + type + '/'; create a type dir?
         }
     }
     return dest;

@@ -116,8 +116,8 @@ describe('get_files', function(){
 describe('get_dest', function(){
     it('should find destanation directory', function(){
         for(var app_name in go.get_files()) {
-            go.get_dest(app_name).should.be.a('string');
             var dest = go.get_dest(app_name);
+            dest.should.be.a('string');
         }
     });
 });
