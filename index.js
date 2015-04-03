@@ -8,42 +8,42 @@ var PLUGIN_NAME = 'gulp-concat-redefine',
     check_list = [];
 
 
-function _check_options(options) {
-    if (!options.directories) throw new PluginError(PLUGIN_NAME, 'Missing "directories" argument!');
-    else if (!Array.isArray(options.directories)) throw new PluginError(PLUGIN_NAME, '"directories" should be Array');
+function _check_options(opts) {
+    if (!opts.directories) throw new PluginError(PLUGIN_NAME, 'Missing "directories" argument!');
+    else if (!Array.isArray(opts.directories)) throw new PluginError(PLUGIN_NAME, '"directories" should be Array');
 
-    if (!options.type) throw new PluginError(PLUGIN_NAME, 'Missing "type" argument!');
-    else if (typeof options.type !== 'string') throw new PluginError(PLUGIN_NAME, '"type" should be String');
+    if (!opts.type) throw new PluginError(PLUGIN_NAME, 'Missing "type" argument!');
+    else if (typeof opts.type !== 'string') throw new PluginError(PLUGIN_NAME, '"type" should be String');
 
-    if (!options.ignore_dirs) options.ignore_dirs = ['node_modules', 'bower_components'];
-    else if (!Array.isArray(options.ignore_dirs)) throw new PluginError(PLUGIN_NAME, '"ignore_dirs" should be Array');
+    if (!opts.modules_dir) opts.modules_dir = _.last(opts.directories);
+    else if (typeof opts.modules_dir !== 'string') throw new PluginError(PLUGIN_NAME, '"modules_dir" should be String');
+    else if (!(opts.modules_dir in opts.directories)) opts.directories.push(opts.modules_dir);
 
-    if (!options.ignore_modules) options.ignore_modules = [];
-    else if (!Array.isArray(options.ignore_modules)) throw new PluginError(PLUGIN_NAME, '"ignore_modules" should be Array');
+    if (!('corm' in opts)) opts.corm = true;
 
-    if (!options.target_prefix) options.target_prefix = '__';
-    else if (typeof options.target_prefix !== 'string') throw new PluginError(PLUGIN_NAME, '"target_prefix" should be String');
+    if (!opts.ignore_dirs) opts.ignore_dirs = ['node_modules', 'bower_components'];
+    else if (!Array.isArray(opts.ignore_dirs)) throw new PluginError(PLUGIN_NAME, '"ignore_dirs" should be Array');
 
-    return options;
+    if (!opts.ignore_modules) opts.ignore_modules = [];
+    else if (!Array.isArray(opts.ignore_modules)) throw new PluginError(PLUGIN_NAME, '"ignore_modules" should be Array');
+
+    if (!opts.modules_prefix) opts.modules_prefix = [''];
+    else if (typeof opts.modules_prefix === 'string') opts.modules_prefix = [opts.modules_prefix];
+
+    if (!opts.target_prefix) opts.target_prefix = '__';
+    else if (typeof opts.target_prefix !== 'string') throw new PluginError(PLUGIN_NAME, '"target_prefix" should be String');
+
+    return opts;
 }
 
 
-var ConcatRedefine = function (options) {
-    if (!(this instanceof ConcatRedefine)) return new ConcatRedefine(options);
-
-    this.options = _check_options(options);
-    this.modules_list = [];
+var ConcatRedefine = function (opts) {
+    if (!(this instanceof ConcatRedefine)) return new ConcatRedefine(opts);
+    this.opts = _check_options(opts);
     this.files = {};
-
-    // TODO: refactoring
-    // TODO2: when file created/deleted, it must be added/removed to files list
-
-    // from main dirs
-    var dirs = this.options.directories;
-    for (var i in dirs) this._get_files(dirs[i], true);
-    // from modules dirs
-    var modules = this.modules_list;
-    for (i in modules) this._get_files(modules[i], false);
+    // TODO2: when file created/deleted, it must be added/removed to files list | gulp watch works fine, but still need tests
+    var dirs = this.opts.directories;
+    for (var i in dirs) this._get_files(dirs[i]);
     check_list = [];
 };
 
@@ -59,16 +59,23 @@ function _clean_files(files_list, app_name) {
 // Make function without loop
 ConcatRedefine.prototype._get_files = function(dir, get_modules) {
     var self = this;
-    var type = self.options.type;
-    var ignore_dirs = self.options.ignore_dirs;
+    var type = this.opts.type;
+    var ignore_dirs = this.opts.ignore_dirs;
     var files_pattern = '/**/*.' + type;
-    var ignore_pattern = '/**/' + this.options.target_prefix + '*.*';
+    var ignore_pattern = '/**/' + this.opts.target_prefix + '*.*';
 
     globby.sync(dir + '/*/').forEach(function(folder) {
         var appName = folder.match(/.+\/(.+)\/$/)[1];
-        var pattern = [dir + appName + files_pattern, '!' + dir + appName + ignore_pattern];
+        var pattern = [dir+appName+files_pattern, '!'+dir+appName+ignore_pattern];
         for (var i in ignore_dirs) pattern.push('!'+dir+'**/'+ignore_dirs[i]+'/**');
         var module_files = globby.sync(pattern);
+
+        if (dir == self.opts.modules_dir) {
+            if (self.opts.ignore_modules.indexOf(appName) + 1) return;
+            for (i in self.opts.modules_prefix) appName = appName.replace(self.opts.modules_prefix[i], '');
+            if (self.opts.corm && !(appName in self.files)) return;
+        }
+
         var clean_module_files = _clean_files(module_files, appName);
 
         if (!module_files.length) return;
@@ -76,33 +83,16 @@ ConcatRedefine.prototype._get_files = function(dir, get_modules) {
         if (!(appName in self.files)) self.files[appName] = [];
 
         for (i in clean_module_files) {
-            if (check_list.indexOf(clean_module_files[i]) < 0) {
+            if (!(check_list.indexOf(clean_module_files[i]) + 1)) {
                 self.files[appName].push(module_files[i]);
                 check_list.push(clean_module_files[i]);
             }
-        }
-
-        if (get_modules && self.options.modules_dir) {
-            globby.sync(self.options.modules_dir + '/*/').forEach(function(folder) {
-                var moduleName = folder.match(/.+\/(.+)\/$/)[1];
-                if (self.options.ignore_modules.indexOf(moduleName) + 1) return;
-                if (moduleName.indexOf(appName) + 1 && self.modules_list.indexOf(folder) < 0) {
-                    self.modules_list.push(folder);
-                }
-            });
         }
     });
 };
 
 
 ConcatRedefine.prototype.get_files = function() {
-    // // from main dirs
-    // var dirs = this.options.directories;
-    // for (var i in dirs) this._get_files(dirs[i], true);
-    // // from modules dirs
-    // var modules = this.modules_list;
-    // for (i in modules) this._get_files(modules[i], false);
-    // check_list = [];
     return this.files;
 };
 
@@ -114,8 +104,8 @@ ConcatRedefine.prototype.get_all_files = function() {
 
 ConcatRedefine.prototype._get_default_dest = function(dirs, first_file) {
     for (var i in dirs) {
-        if (first_file.indexOf(dirs[i]) >= 0) return dirs[i];
-        else if (first_file.indexOf(this.options.modules_dir) >= 0) return this.options.modules_dir;
+        if (first_file.indexOf(dirs[i]) + 1) return dirs[i];
+        else if (first_file.indexOf(this.opts.modules_dir) + 1) return this.opts.modules_dir;
     }
     return dirs[0];
 };
@@ -124,17 +114,16 @@ ConcatRedefine.prototype._get_default_dest = function(dirs, first_file) {
 ConcatRedefine.prototype.get_dest = function(key) {
     if (key === undefined) throw new PluginError(PLUGIN_NAME, 'Missing "key" argument!');
     var files = this.files[key];
-    var dest = this._get_default_dest(this.options.directories, files[0]);
-    var type = this.options.type;
+    var dest = this._get_default_dest(this.opts.directories, files[0]);
+    var type = this.opts.type;
 
-    if (files.length) {
-        var dest_dir = files[0].split('/');
-        if (dest_dir.indexOf(type) + 1) {
-            while (type != dest_dir[dest_dir.length-1]) dest_dir.pop();
-            dest = dest_dir.join('/') + '/';
-        } else {
-            dest = dest + key + '/'; // + type + '/'; create a type dir?
-        }
+    // if (files.length) {}
+    var dest_dir = files[0].split('/');
+    if (dest_dir.indexOf(type) + 1) {
+        while (type != dest_dir[dest_dir.length-1]) dest_dir.pop();
+        dest = dest_dir.join('/') + '/';
+    } else {
+        dest = dest + key + '/'; // + type + '/'; create a type dir?
     }
     return dest;
 };
@@ -142,7 +131,7 @@ ConcatRedefine.prototype.get_dest = function(key) {
 
 ConcatRedefine.prototype.get_target = function(key) {
     if (key === undefined) throw new PluginError(PLUGIN_NAME, 'Missing "key" argument!');
-    return this.options.target_prefix + key + '.' + this.options.type;
+    return this.opts.target_prefix + key + '.' + this.opts.type;
 };
 
 
@@ -155,15 +144,11 @@ ConcatRedefine.prototype.get_all_targets = function() {
 ConcatRedefine.prototype.get_watch_patterns = function() {
     // function convertPath(f) { return path.dirname(f) + '/**/*.' + type; }
     // _.uniq(_.map(this.get_all_files(), convertPath));
-    var type = this.options.type;
-    var dirs = this.options.directories;
-    var ignores = ['!**/__*.' + type];
-
-    if (this.options.modules_dir) {
-        dirs.push(this.options.modules_dir);
-        ignores.push('!' + this.options.modules_dir + '**/__*.' + type);
-    }
-    return _.map(dirs, function(p) { return p + '**/*.' + type; }).concat(ignores);
+    var type = this.opts.type;
+    var dirs = this.opts.directories;
+    var md = this.opts.modules_dir;
+    if (!(dirs.indexOf(md) + 1)) dirs.push(md);
+    return _.map(dirs, function(p) { return p + '**/*.' + type; }).concat(['!**/__*.'+type, '!'+md+'**/__*.'+type]);
 };
 
 module.exports = ConcatRedefine;
