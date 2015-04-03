@@ -66,9 +66,9 @@ ConcatRedefine.prototype._get_files = function(dir, get_modules) {
 
     globby.sync(dir + '/*/').forEach(function(folder) {
         var appName = folder.match(/.+\/(.+)\/$/)[1];
-        var pattern = [dir+appName+files_pattern, '!'+dir+appName+ignore_pattern];
-        for (var i in ignore_dirs) pattern.push('!'+dir+'**/'+ignore_dirs[i]+'/**');
-        var module_files = globby.sync(pattern);
+        var patterns = [dir+appName+files_pattern, '!'+dir+appName+ignore_pattern];
+        for (var i in ignore_dirs) patterns.push('!'+dir+'**/'+ignore_dirs[i]+'/**');
+        var module_files = globby.sync(patterns);
 
         if (dir == self.opts.modules_dir) {
             if (self.opts.ignore_modules.indexOf(appName) + 1) return;
