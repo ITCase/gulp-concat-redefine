@@ -42,9 +42,6 @@ var ConcatRedefine = function (opts) {
     this.opts = _check_options(opts);
     this.files = {};
     this.get_files();
-    // var dirs = this.opts.directories;
-    // for (var i in dirs) this._get_files(dirs[i]);
-    // check_list = [];
 };
 
 
@@ -93,6 +90,7 @@ ConcatRedefine.prototype._get_files = function(dir, get_modules) {
 
 
 ConcatRedefine.prototype.get_files = function() {
+    this.files = {};
     var dirs = this.opts.directories;
     for (var i in dirs) this._get_files(dirs[i]);
     check_list = [];
@@ -145,8 +143,6 @@ ConcatRedefine.prototype.get_all_targets = function() {
 
 
 ConcatRedefine.prototype.get_watch_patterns = function() {
-    // function convertPath(f) { return path.dirname(f) + '/**/*.' + type; }
-    // _.uniq(_.map(this.get_all_files(), convertPath));
     var type = this.opts.type;
     var md = this.opts.modules_dir;
     var ignore_dirs = this.opts.ignore_dirs;

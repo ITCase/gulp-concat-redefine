@@ -8,35 +8,33 @@ var fs = require('fs'),
 
 var ConcatRedefine = require('../index');
 
-var options = {
+var opts = {
     directories: [
         './tests/fixtures/static/',
         './tests/fixtures/app/',
         './tests/fixtures/modules/',
     ],
-    modules_dir: 'itcase-dev',
+    // modules_dir: 'itcase-dev',
+    corm: false,
     ignore_dir: ['ignore-directory'],
     type: 'css',
     target_prefix: '__'
 };
 
-var go = new ConcatRedefine(options);
+var go = new ConcatRedefine(opts);
 
-describe('object options', function(){
-    it('should have options', function(){
-        go.should.have.property('options').that.is.a('object');
-        go.should.have.property('modules_list').that.is.a('array');
+describe('object opts', function(){
+    it('should have opts', function(){
+        go.should.have.property('opts').that.is.a('object');
         go.should.have.property('files').that.is.a('object');
-        go.options.should.have.property('directories').that.is.a('array');
-        go.options.should.have.property('modules_dir').that.is.a('string');
-        go.options.should.have.property('ignore_dir').that.is.a('array');
-        go.options.should.have.property('type').that.is.a('string');
-        go.options.should.have.property('ignore_default').that.is.a('array');
-        go.options.should.have.property('target_prefix').that.is.a('string');
+        go.opts.should.have.property('directories').that.is.a('array');
+        go.opts.should.have.property('modules_dir').that.is.a('string');
+        go.opts.should.have.property('ignore_dir').that.is.a('array');
+        go.opts.should.have.property('type').that.is.a('string');
+        go.opts.should.have.property('target_prefix').that.is.a('string');
     });
 
     it('should have methods', function(){
-        expect(go).to.respondTo('_clean_files');
         expect(go).to.respondTo('_get_files');
         expect(go).to.respondTo('get_files');
         expect(go).to.respondTo('get_dest');
@@ -46,12 +44,13 @@ describe('object options', function(){
 
 describe('get_files', function(){
     it('should find directories and apps', function(){
-        var dirs = go.options.directories;
+        var dirs = go.opts.directories;
         dirs.should.to.be.a('array');
         dirs.should.to.have.length(3);
+        go.files = {};
         for (var i in dirs){
             dirs[i].should.to.be.a('string');
-            go._get_files(dirs[i], true);
+            go._get_files(dirs[i]);
         }
         go.files.should.to.be.a('object');
         expect(go.files).to.have.keys('app1', 'app2', 'app3', 'app4', 'app5', 'app6');
@@ -115,7 +114,7 @@ describe('get_files', function(){
 
 describe('get_dest', function(){
     it('should find destanation directory', function(){
-        for(var app_name in go.get_files()) {
+        for(var app_name in go.files) {
             var dest = go.get_dest(app_name);
             dest.should.be.a('string');
         }
@@ -124,10 +123,10 @@ describe('get_dest', function(){
 
 describe('get_target', function(){
     it('should set target file', function(){
-        for(var app_name in go.get_files()) {
+        for(var app_name in go.files) {
             app_name.should.be.a('string');
             go.get_target(app_name).should.be.a('string');
-            expect(go.get_target(app_name)).to.contain(go.options.target_prefix, app_name);
+            expect(go.get_target(app_name)).to.contain(go.opts.target_prefix, app_name);
         }
     });
 });
