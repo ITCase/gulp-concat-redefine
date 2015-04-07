@@ -41,10 +41,10 @@ var ConcatRedefine = function (opts) {
     if (!(this instanceof ConcatRedefine)) return new ConcatRedefine(opts);
     this.opts = _check_options(opts);
     this.files = {};
-    // TODO2: when file created/deleted, it must be added/removed to files list | gulp watch works fine, but still need tests
-    var dirs = this.opts.directories;
-    for (var i in dirs) this._get_files(dirs[i]);
-    check_list = [];
+    this.get_files();
+    // var dirs = this.opts.directories;
+    // for (var i in dirs) this._get_files(dirs[i]);
+    // check_list = [];
 };
 
 
@@ -68,7 +68,6 @@ ConcatRedefine.prototype._get_files = function(dir, get_modules) {
         var appName = folder.match(/.+\/(.+)\/$/)[1];
         var patterns = [dir+appName+files_pattern, '!'+dir+appName+ignore_pattern];
         for (var i in ignore_dirs) patterns.push('!'+dir+'**/'+ignore_dirs[i]+'/**');
-        var module_files = globby.sync(patterns);
 
         if (dir == self.opts.modules_dir) {
             if (self.opts.ignore_modules.indexOf(appName) + 1) return;
@@ -76,6 +75,7 @@ ConcatRedefine.prototype._get_files = function(dir, get_modules) {
             if (self.opts.corm && !(appName in self.files)) return;
         }
 
+        var module_files = globby.sync(patterns);
         var clean_module_files = _clean_files(module_files, appName);
 
         if (!module_files.length) return;
@@ -83,7 +83,7 @@ ConcatRedefine.prototype._get_files = function(dir, get_modules) {
         if (!(appName in self.files)) self.files[appName] = [];
 
         for (i in clean_module_files) {
-            if (!(check_list.indexOf(clean_module_files[i]) + 1)) {
+            if (check_list.indexOf(clean_module_files[i]) + 1 === 0) {
                 self.files[appName].push(module_files[i]);
                 check_list.push(clean_module_files[i]);
             }
@@ -93,6 +93,9 @@ ConcatRedefine.prototype._get_files = function(dir, get_modules) {
 
 
 ConcatRedefine.prototype.get_files = function() {
+    var dirs = this.opts.directories;
+    for (var i in dirs) this._get_files(dirs[i]);
+    check_list = [];
     return this.files;
 };
 
@@ -145,10 +148,13 @@ ConcatRedefine.prototype.get_watch_patterns = function() {
     // function convertPath(f) { return path.dirname(f) + '/**/*.' + type; }
     // _.uniq(_.map(this.get_all_files(), convertPath));
     var type = this.opts.type;
-    var dirs = this.opts.directories;
     var md = this.opts.modules_dir;
-    if (!(dirs.indexOf(md) + 1)) dirs.push(md);
-    return _.map(dirs, function(p) { return p + '**/*.' + type; }).concat(['!**/__*.'+type, '!'+md+'**/__*.'+type]);
+    var ignore_dirs = this.opts.ignore_dirs;
+    var dirs = this.opts.directories;
+    if (dirs.indexOf(md) + 1 === 0) dirs.push(md);
+    var patterns = _.map(dirs, function(p) { return p+'**/*.'+type; }).concat(['!**/__*.'+type, '!'+md+'**/__*.'+type]);
+    for (var i in ignore_dirs) patterns = patterns.concat(['!**/'+ignore_dirs[i]+'/**', '!'+md+'**/'+ignore_dirs[i]+'/**']);
+    return patterns;
 };
 
 module.exports = ConcatRedefine;
