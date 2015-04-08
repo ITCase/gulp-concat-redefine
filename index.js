@@ -1,9 +1,12 @@
-'use strict';
+/* jslint node: true */
+
+"use strict";
+
 
 var globby = require("globby"),
     // path = require("path"),
     gutil = require('gulp-util'),
-    PluginError = gutil.PluginError;
+    PluginError = gutil.PluginError,
     _ = require('lodash');
 
 var PLUGIN_NAME = 'gulp-concat-redefine',
