@@ -1,3 +1,5 @@
+'use strict';
+
 var globby = require("globby"),
     // path = require("path"),
     gutil = require('gulp-util'),
