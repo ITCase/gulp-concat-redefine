@@ -1,0 +1,13 @@
+.*.swp
+._*
+.DS_Store
+.git
+.hg
+.lock-wscript
+.svn
+.wafpickle-*
+__*.*
+*.sublime-project
+*.sublime-workspace
+CVS
+npm-debug.log
