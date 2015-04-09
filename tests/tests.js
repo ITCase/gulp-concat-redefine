@@ -5,21 +5,16 @@ var fs = require('fs'),
     should = require('chai').should();
 
 var ConcatRedefine = require('../index');
-
-var opts = {
-    directories: [
-        './tests/fixtures/static/',
-        './tests/fixtures/app/',
-        './tests/fixtures/modules/',
-    ],
-    // modules_dir: 'itcase-dev',
-    corm: false,
-    ignore_dir: ['ignore-directory'],
+var cr = new ConcatRedefine({
+    directories: ['./tests/fixtures/static/', './tests/fixtures/app/', './tests/fixtures/modules/'],
     type: 'css',
+    corm: false,
+    ignore_dirs: ['ignore-directory'],
     target_prefix: '__'
-};
-
-var cr = new ConcatRedefine(opts);
+    // modules_dir: './tests/fixtures/modules/',
+    // ignore_modules: [],
+    // modules_prefix: 'django-',
+});
 
 
 describe('object opts', function(){
@@ -28,16 +23,21 @@ describe('object opts', function(){
         cr.should.have.property('files').that.is.a('object');
         cr.opts.should.have.property('directories').that.is.a('array');
         cr.opts.should.have.property('modules_dir').that.is.a('string');
-        cr.opts.should.have.property('ignore_dir').that.is.a('array');
+        cr.opts.should.have.property('ignore_dirs').that.is.a('array');
+        cr.opts.should.have.property('ignore_modules').that.is.a('array');
         cr.opts.should.have.property('type').that.is.a('string');
         cr.opts.should.have.property('target_prefix').that.is.a('string');
+        cr.opts.should.have.property('modules_prefix').that.is.a('array');
+        cr.opts.should.have.property('corm').that.is.a('boolean');
     });
 
     it('should have methods', function(){
-        expect(cr).to.respondTo('_get_files');
         expect(cr).to.respondTo('get_files');
+        expect(cr).to.respondTo('get_all_files');
         expect(cr).to.respondTo('get_dest');
         expect(cr).to.respondTo('get_target');
+        expect(cr).to.respondTo('get_all_targets');
+        expect(cr).to.respondTo('get_watch_patterns');
     });
 });
 
@@ -51,15 +51,10 @@ describe('get_files', function(){
     }
 
     it('should find directories and apps', function(){
-        var dirs = cr.opts.directories;
-        dirs.should.to.be.a('array').that.length(3);
-        cr.files = {};
-        for (var i in dirs){
-            dirs[i].should.to.be.a('string');
-            cr._get_files(dirs[i]);
-        }
-        expect(cr.files).to.be.a('object');
-        expect(cr.files).to.have.keys('app1', 'app2', 'app3', 'app4', 'app5', 'app6');
+        cr.opts.directories.should.to.be.a('array').that.length(3);
+        var files = cr.get_files();
+        expect(files).to.be.a('object');
+        expect(files).to.have.keys('app1', 'app2', 'app3', 'app4', 'app5', 'app6');
     });
 
     it('should get files from "static/app1", "app/app1", "modules/app1" and build in "static/app1"', function(){
@@ -138,28 +133,23 @@ describe('get_all_files', function(){
             './tests/fixtures/static/app1/app1_file3.css',
             './tests/fixtures/static/app1/app1_file4.css',
             './tests/fixtures/modules/app1/app1_file5.css',
-
             './tests/fixtures/app/app2/app2_file1.css',
             './tests/fixtures/modules/app2/app2_file2.css',
-
             './tests/fixtures/static/app3/app3_file1.css',
             './tests/fixtures/static/app3/app3_file2.css',
             './tests/fixtures/modules/app3/app3_file3.css',
-
             './tests/fixtures/app/app4/app4_file1.css',
             './tests/fixtures/app/app4/app4_file2.css',
             './tests/fixtures/app/app4/app4_file3.css',
-
             './tests/fixtures/modules/app5/app5_file1.css',
             './tests/fixtures/modules/app5/app5_file2.css',
-
             './tests/fixtures/static/app6/app6_file1.css',
             './tests/fixtures/static/app6/app6_file2.css',
             './tests/fixtures/static/app6/app6_file3.css',
             './tests/fixtures/static/app6/app6_file4.css',
         ];
 
-        expect(all_files).to.have.length(right_all_files.length);
+        expect(all_files).to.be.a('array').that.length(right_all_files.length);
         right_all_files.forEach(function (f) { expect(all_files).to.contain(f); });
     });
 });
@@ -178,14 +168,12 @@ describe('get_all_targets', function(){
             './tests/fixtures/static/app6/__app6.css',
         ];
 
-        expect(all_targets).to.have.length(right_all_targets.length);
-
+        expect(all_targets).to.be.a('array').that.length(right_all_targets.length);
         right_all_targets.forEach(function (f) { expect(all_targets).to.contain(f); });
 
         for(var app_name in cr.files) {
             expect(right_all_targets).to.contain(cr.get_dest(app_name) + cr.get_target(app_name));
         }
-
     });
 });
 
@@ -193,7 +181,17 @@ describe('get_all_targets', function(){
 describe('get_watch_patterns', function(){
     it('should set watch patterns', function(){
         var watch_patterns = cr.get_watch_patterns();
-        var right_watch_patterns = [];
-        console.error(watch_patterns);
+        var right_watch_patterns = [
+            './tests/fixtures/static/**/*.css',
+            './tests/fixtures/app/**/*.css',
+            './tests/fixtures/modules/**/*.css',
+            '!**/__*.css',
+            '!./tests/fixtures/modules/**/__*.css',
+            '!**/ignore-directory/**',
+            '!./tests/fixtures/modules/**/ignore-directory/**'
+        ];
+
+        expect(watch_patterns).to.be.a('array').that.length(right_watch_patterns.length);
+        right_watch_patterns.forEach(function (f) { expect(watch_patterns).to.contain(f); });
     });
 });
