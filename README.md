@@ -148,7 +148,7 @@ Files in the specified directories will be ignored for all applications.
 
 Type: `Array`
 
-Default: ['node_modules', 'bower_components']
+Default: `['node_modules', 'bower_components']`
 
 
 ###options.ignore_modules
@@ -175,8 +175,6 @@ Prefix for target file name.
 Type: `String`
 
 Default: '__'
-
-> for plugins like 'gulp-concat'.
 
 
 ###Properties
