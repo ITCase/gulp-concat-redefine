@@ -81,13 +81,13 @@ in `cr.files` stored object with files:
      '../modules/baz/css/baz.css' ]
 }
 ```
-`cr.get_target` return building file name by module name:
+`cr.get_target` returns name of building file by application name:
 ```
 __bar.css
 __foo.css
 __baz.css
 ```
-`cr.get_dest` return destination for concatenated file:
+`cr.get_dest` returns destination for concatenated file:
 ```
 ./static/bar/css/
 ./static/foo/css/
@@ -152,6 +152,7 @@ Default: ['node_modules', 'bower_components']
 
 
 ###options.ignore_modules
+Specified applications will be ignored for `options.modules_dir` directory.
 
 Type: `Array`
 
@@ -159,17 +160,23 @@ Default: []
 
 
 ###options.modules_prefix
+Prefix for applications names in `options.modules_dir` directory.
 
 Type: `String` or `Array`
 
 Default: []
 
+> e.g. ['django-', 'pyramid_']. if you have 'django-someapp/someapp/' or some.
+
 
 ###options.target_prefix
+Prefix for target file name.
 
 Type: `String`
 
 Default: '__'
+
+> for plugins like 'gulp-concat'.
 
 
 ###Properties
@@ -177,12 +184,45 @@ Default: '__'
 * `ConcatRedefine.files` - Object that stores a list of files for each application.
 
 
-##ConcatRedefine.get_files()
-##ConcatRedefine.get_all_files()
-##ConcatRedefine.get_dest(key)
-##ConcatRedefine.get_target(key)
-##ConcatRedefine.get_all_targets()
-##ConcatRedefine.get_watch_patterns()
+##Methods
+###ConcatRedefine.get_files()
+Rebuild and returns `ConcatRedefine.files`.
+
+Type: `Object`
+
+
+###ConcatRedefine.get_all_files()
+Returns list of all collected files.
+
+Type: `Array`
+
+
+###ConcatRedefine.get_dest(key)
+`key` - key from `ConcatRedefine.files`.
+
+Returns destination path.
+
+Type: `String`
+
+
+###ConcatRedefine.get_target(key)
+`key` - key from `ConcatRedefine.files`.
+
+Returns target file name.
+
+Type: `String`
+
+
+###ConcatRedefine.get_all_targets()
+Returns list of target files.
+
+Type: `Array`
+
+
+###ConcatRedefine.get_watch_patterns()
+Returns glob patterns.
+
+Type: `Array`
 
 
 #Recipes

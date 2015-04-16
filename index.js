@@ -60,8 +60,7 @@ function _clean_files(files_list, app_name) {
 }
 
 
-// Make function without loop
-ConcatRedefine.prototype._get_files = function(dir, get_modules) {
+ConcatRedefine.prototype._get_files = function(dir) {
     var type = this.opts.type;
     var ignore_dirs = this.opts.ignore_dirs;
     var files_pattern = '/**/*.' + type;
