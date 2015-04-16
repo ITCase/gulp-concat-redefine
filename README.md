@@ -1,4 +1,4 @@
-# gulp-concat-redefine 
+# gulp-concat-redefine
 
 ----------
 
@@ -94,10 +94,10 @@ Type: `Array` Default: `null`
 
 List of directories to search for files
 
-### Example: 
+### Example:
 ```js
      directories: {
-          ['./static/', '1'] 
+          ['./static/', '1']
      }
 ```
 ## modules_dir
@@ -119,8 +119,8 @@ Type: `String` or `Array` Default: `null`
 Type: `String` Default: `__`
 
 ```js
-     target_prefix: '__bunde__' 
-     type: 'css' 
+     target_prefix: '__bunde__'
+     type: 'css'
 ```
 > Returns file named: `__bunde__app-name.css`
 
@@ -128,21 +128,21 @@ Type: `String` Default: `__`
 
 Type: `String` or `Array` Default: `null`
 
-### Example: 
+### Example:
 ```js
-     type: ['css', 'js'] 
+     type: ['css', 'js']
 ```
 
 ## API
 
 ### `get_files(app_name)`
-* **app_name** - `string` 
+* **app_name** - `string`
 
 ### `get_dest(app_name)`
-* **app_name** - `string` 
+* **app_name** - `string`
 
 ### `get_target(app_name)`
-* **app_name** - `string` 
+* **app_name** - `string`
 
 # License
 
