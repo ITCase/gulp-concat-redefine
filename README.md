@@ -1,14 +1,10 @@
 # gulp-concat-redefine
 
-----------
-
 > Finds redefined files and concat in one
 
 A [Gulp](http://gulpjs.com/) plugin for finding redefined application files and concat them in one.
 
 # Getting Started
-
-----------
 
 ## Install
 
@@ -103,7 +99,6 @@ __baz.css
 
 #API
 
-----------
 ##ConcatRedefine(options)
 ###Options
 List of parameters for file collection.
@@ -225,8 +220,6 @@ Type: `Array`
 
 #Recipes
 
-----------
-
  - Redefine Django app
 
 
@@ -251,7 +244,5 @@ gulp.task('default', function () {
 ```
 
 # License
-
-----------
 
 MIT © [ITCase](http://itcase.pro/)
