@@ -97,13 +97,13 @@ __baz.css
 ![How it work](docs/app1.png)
 
 
-#API
+# API
 
-##ConcatRedefine(options)
-###Options
+## ConcatRedefine(options)
+### Options
 List of parameters for file collection.
 
-###options.directories
+### options.directories
 List of directories to search for files.
 
 Type: `Array`
@@ -112,7 +112,7 @@ _Required_
 
 > Each directory should contain a list of applications for file search. Redefinition in order of priority directories.
 
-###options.type
+### options.type
 Extension of files for collection.
 
 Type: `String`
@@ -120,7 +120,7 @@ Type: `String`
 _Required_
 
 
-###options.modules_dir
+### options.modules_dir
 Path to the directory modules added to the project.
 
 Type: `String`
@@ -128,7 +128,7 @@ Type: `String`
 Default: last of `options.directories`
 
 
-###options.corm
+### options.corm
 Collect only redefined modules.
 
 Type: `Boolean`
@@ -138,7 +138,7 @@ Default: `true`
 > if 'false', plugin collects all files from modules directory.
 
 
-###options.ignore_dirs
+### options.ignore_dirs
 Files in the specified directories will be ignored for all applications.
 
 Type: `Array`
@@ -146,7 +146,7 @@ Type: `Array`
 Default: `['node_modules', 'bower_components']`
 
 
-###options.ignore_modules
+### options.ignore_modules
 Specified applications will be ignored for `options.modules_dir` directory.
 
 Type: `Array`
@@ -154,7 +154,7 @@ Type: `Array`
 Default: []
 
 
-###options.modules_prefix
+### options.modules_prefix
 Prefix for applications names in `options.modules_dir` directory.
 
 Type: `String` or `Array`
@@ -164,7 +164,7 @@ Default: []
 > e.g. ['django-', 'pyramid_']. if you have 'django-someapp/someapp/' or some.
 
 
-###options.target_prefix
+### options.target_prefix
 Prefix for target file name.
 
 Type: `String`
@@ -172,25 +172,25 @@ Type: `String`
 Default: '__'
 
 
-###Properties
+### Properties
 * `ConcatRedefine.opts` - The "options" object passed on initialization.
 * `ConcatRedefine.files` - Object that stores a list of files for each application.
 
 
-##Methods
-###ConcatRedefine.get_files()
+## Methods
+### ConcatRedefine.get_files()
 Rebuild and returns `ConcatRedefine.files`.
 
 Type: `Object`
 
 
-###ConcatRedefine.get_all_files()
+### ConcatRedefine.get_all_files()
 Returns list of all collected files.
 
 Type: `Array`
 
 
-###ConcatRedefine.get_dest(key)
+### ConcatRedefine.get_dest(key)
 `key` - key from `ConcatRedefine.files`.
 
 Returns destination path.
@@ -198,7 +198,7 @@ Returns destination path.
 Type: `String`
 
 
-###ConcatRedefine.get_target(key)
+### ConcatRedefine.get_target(key)
 `key` - key from `ConcatRedefine.files`.
 
 Returns target file name.
@@ -206,19 +206,19 @@ Returns target file name.
 Type: `String`
 
 
-###ConcatRedefine.get_all_targets()
+### ConcatRedefine.get_all_targets()
 Returns list of target files.
 
 Type: `Array`
 
 
-###ConcatRedefine.get_watch_patterns()
+### ConcatRedefine.get_watch_patterns()
 Returns glob patterns.
 
 Type: `Array`
 
 
-#Recipes
+# Recipes
 
  - Redefine Django app
 
