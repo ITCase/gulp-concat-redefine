@@ -28,7 +28,7 @@ function _check_options(opts) {
 
     if (!('corm' in opts)) opts.corm = true; // collect only redefined modules
 
-    if (!opts.ignore_dirs) opts.ignore_dirs = ['node_modules', 'bower_components'];
+    if (!opts.ignore_dirs) opts.ignore_dirs = ['node_modules', 'bower_components', 'tests', '_build'];
     else if (!Array.isArray(opts.ignore_dirs)) throw new PlError(PL_NAME, '"ignore_dirs" should be Array');
 
     if (!opts.ignore_modules) opts.ignore_modules = [];
@@ -66,7 +66,9 @@ ConcatRedefine.prototype._get_files = function(dir) {
     var files_pattern = '/**/*.' + type;
     var ignore_pattern = '/**/' + this.opts.target_prefix + '*.*';
 
-    globby.sync(dir + '/*/').forEach(function(folder) {
+    if (!(_.endsWith(dir, '/'))) dir += '/';
+
+    globby.sync(dir + '*/').forEach(function(folder) {
         var appName = folder.match(/.+\/(.+)\/$/)[1];
         var patterns = [dir+appName+files_pattern, '!'+dir+appName+ignore_pattern];
         for (var i in ignore_dirs) patterns.push('!'+dir+'**/'+ignore_dirs[i]+'/**');

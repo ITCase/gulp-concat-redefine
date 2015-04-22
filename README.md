@@ -220,26 +220,38 @@ Type: `Array`
 
 # Recipes
 
- - Redefine Django app
+ - Redefine Django or Pyramid app
 
 
 ```js
 var gulp = require('gulp');
 var concat = require('gulp-concat');
+var minifyCSS = require('gulp-minify-css');
+var watch = require('gulp-watch');
 var ConcatRedefine = require('gulp-concat-redefine');
+var cr = new ConcatRedefine({
+        directories: ['./static/', './apps/'],
+        modules_dir: '../modules/',
+        corm: false,
+        ignore_dirs: ['node_modules', 'bower_components', 'tests', '_build', 'plugins', 'lib'],
+        modules_prefix: ['django-', 'pyramid_'],
+        type: 'css'
+    });
 
-gulp.task('default', function () {
+gulp.task('css', function() {
+    for (var app_name in cr.get_files()) {
+        gulp.src(cr.files[app_name])
+            .pipe(minifyCSS())
+            .pipe(concat(cr.get_target(app_name)))
+            .pipe(gulp.dest(cr.get_dest(app_name)));
+    }
+});
 
-  var cr = new ConcatRedefine({
-      directories: ['./static/', './apps/', '../modules/'],
-      type: 'css'
-  });
 
-  for (var app_name in cr.files) {
-      gulp.src(cr.files[app_name])
-          .pipe(concat(cr.get_target(app_name)))
-          .pipe(gulp.dest(cr.get_dest(app_name)));
-  }
+gulp.task('watch', function() {
+    watch(cr.get_watch_patterns(), { verbose: true }, function () {
+        gulp.start('css');
+    });
 });
 ```
 
