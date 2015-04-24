@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/ITCase/gulp-concat-redefine.svg?branch=master)](https://travis-ci.org/ITCase/gulp-concat-redefine)
+[![Coverage Status](https://coveralls.io/repos/ITCase/gulp-concat-redefine/badge.svg)](https://coveralls.io/r/ITCase/gulp-concat-redefine)
 
 # gulp-concat-redefine
 

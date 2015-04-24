@@ -19,9 +19,13 @@ sudo: false
 env:
   global:
     - NODE_ENV=travisci
+    - NODE_ENV=test
 
 before_script:
-  - npm install
+  - npm install --dev
 
 script:
   - mocha --timeout 999999 tests
+
+after_script:
+   - istanbul cover node_modules/mocha/bin/_mocha -- tests/ -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
