@@ -18,6 +18,7 @@
   ],
   "scripts": {
     "test": "./node_modules/.bin/testem"
+    "mocha": "mocha -b --timeout 999999 /tests/"
   },
   "homepage": "https://github.com/ITCase/gulp-concat-redefine",
   "repository": {
