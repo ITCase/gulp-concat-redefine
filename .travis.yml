@@ -20,7 +20,4 @@ env:
     - NODE_ENV=travisci
 
 script:
-  - nosetests --with-coverage --cover-package pyramid_sacrud --cover-erase --with-doctest
-
-after_success:
   - npm test
