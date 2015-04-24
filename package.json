@@ -11,7 +11,7 @@
   "keywords": [
     "gulp",
     "gulpplugin",
-	  "gulp-concat"
+    "gulp-concat"
   ],
   "files": [
     "index.js"

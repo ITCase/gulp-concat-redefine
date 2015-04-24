@@ -13,8 +13,11 @@ notifications:
   email: "ggift@mail.ru"
 
 node_js:
-  - "0.12"
-  - "iojs"
+  - "0.10"
+
+env:
+  global:
+    - NODE_ENV=travisci
 
 script:
   - nosetests --with-coverage --cover-package pyramid_sacrud --cover-erase --with-doctest
