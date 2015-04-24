@@ -10,7 +10,6 @@ language: node_js
 
 notifications:
   email: "arkadiy@bk.ru"
-  email: "ggift@mail.ru"
 
 node_js:
   - "0.10"
@@ -22,8 +21,7 @@ env:
     - NODE_ENV=travisci
 
 before_script:
-  - npm install testem -g
   - npm install
 
 script:
-  - npm mocha
+  - mocha -b --timeout 999999 tests/
