@@ -1,6 +1,6 @@
 {
   "name": "gulp-concat-redefine",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "GulpJS plugin to find redefined files in directories and concat in one",
   "author": "ITCase <info@itcase.pro>",
   "maintainers": [
@@ -11,7 +11,7 @@
   "keywords": [
     "gulp",
     "gulpplugin",
-	"gulp-concat"
+	  "gulp-concat"
   ],
   "files": [
     "index.js"
