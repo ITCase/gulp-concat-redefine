@@ -1,4 +1,4 @@
-|Build Status|
+[![Build Status](https://travis-ci.org/ITCase/gulp-concat-redefine.svg?branch=master)](https://travis-ci.org/ITCase/gulp-concat-redefine)
 
 # gulp-concat-redefine
 
@@ -259,8 +259,4 @@ gulp.task('watch', function() {
 
 # License
 
-MIT © [ITCase](http://itcase.pro/)
-
-
-.. |Build Status| image:: https://travis-ci.org/ITCase/gulp-concat-redefine.svg?branch=master
-   :target: https://travis-ci.org/ITCase/gulp-concat-redefine
+The project is licensed under the MIT license.
