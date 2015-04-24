@@ -24,4 +24,4 @@ before_script:
   - npm install
 
 script:
-  - mocha -b --timeout 999999 tests/
+  - mocha --timeout 999999 tests
