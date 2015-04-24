@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/ITCase/gulp-concat-redefine.svg?branch=master)](https://travis-ci.org/ITCase/gulp-concat-redefine)
-[![Coverage Status](https://coveralls.io/repos/ITCase/gulp-concat-redefine/badge.svg)](https://coveralls.io/r/ITCase/gulp-concat-redefine)
+[![Build Status][travis-image]][travis-url] [![Coveralls Status][coveralls-image]][coveralls-url]
 
 # gulp-concat-redefine
 
@@ -261,3 +260,10 @@ gulp.task('watch', function() {
 # License
 
 The project is licensed under the MIT license.
+
+
+[travis-url]: https://travis-ci.org/ITCase/gulp-concat-redefine
+[travis-image]: https://travis-ci.org/ITCase/gulp-concat-redefine.svg?branch=master
+
+[coveralls-url]: https://coveralls.io/r/ITCase/gulp-concat-redefine
+[coveralls-image]: https://coveralls.io/repos/ITCase/gulp-concat-redefine/badge.svg
