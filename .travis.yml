@@ -19,5 +19,8 @@ env:
   global:
     - NODE_ENV=travisci
 
+before_script:
+  - npm install testem chai mocha -g
+
 script:
   - npm test
