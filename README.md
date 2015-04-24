@@ -1,3 +1,5 @@
+|Build Status|
+
 # gulp-concat-redefine
 
 > Finds redefined files and concat in one
@@ -258,3 +260,7 @@ gulp.task('watch', function() {
 # License
 
 MIT © [ITCase](http://itcase.pro/)
+
+
+.. |Build Status| image:: https://travis-ci.org/ITCase/gulp-concat-redefine.svg?branch=master
+   :target: https://travis-ci.org/ITCase/gulp-concat-redefine
