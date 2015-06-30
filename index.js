@@ -71,11 +71,11 @@ ConcatRedefine.prototype._get_files = function(dir) {
     globby.sync(dir + '*/').forEach(function(folder) {
         var appName = folder.match(/.+\/(.+)\/$/)[1];
         var patterns = [dir+appName+files_pattern, '!'+dir+appName+ignore_pattern];
-        for (var i in ignore_dirs) patterns.push('!'+dir+'**/'+ignore_dirs[i]+'/**');
+        for (var i in ignore_dirs) { patterns.push('!'+dir+'**/'+ignore_dirs[i]+'/**'); }
 
         if (dir == this.opts.modules_dir) {
             if (this.opts.ignore_modules.indexOf(appName) + 1) return;
-            for (i in this.opts.modules_prefix) appName = appName.replace(this.opts.modules_prefix[i], '');
+            for (i in this.opts.modules_prefix) { appName = appName.replace(this.opts.modules_prefix[i], ''); }
             if (this.opts.corm && !(appName in this.files)) return;
         }
 
@@ -99,7 +99,7 @@ ConcatRedefine.prototype._get_files = function(dir) {
 ConcatRedefine.prototype.get_files = function() {
     this.files = {};
     var dirs = this.opts.directories;
-    for (var i in dirs) this._get_files(dirs[i]);
+    for (var i in dirs) { this._get_files(dirs[i]); }
     _check_list = [];
     return this.files;
 };
@@ -144,7 +144,7 @@ ConcatRedefine.prototype.get_target = function(key) {
 
 
 ConcatRedefine.prototype.get_all_targets = function() {
-    return _.map(_.keys(this.files), function (key) { return this.get_dest(key) + this.get_target(key); }.bind(this));
+    return _.map(_.keys(this.files), function (key) { return this.get_dest(key) + this.get_target(key); }, this);
 };
 
 // TODO: make ignore patterns for all directories(personaly)
@@ -156,8 +156,17 @@ ConcatRedefine.prototype.get_watch_patterns = function() {
 
     if (dirs.indexOf(md) + 1 === 0) dirs.push(md);
     var patterns = _.map(dirs, function(p) {return p+'**/*.'+type; }).concat(['!**/__*.'+type, '!'+md+'**/__*.'+type]);
-    for (var i in ignore_dirs) patterns = patterns.concat(['!**/'+ignore_dirs[i]+'/**', '!'+md+'**/'+ignore_dirs[i]+'/**']);
+    for (var i in ignore_dirs) { patterns = patterns.concat(['!**/'+ignore_dirs[i]+'/**', '!'+md+'**/'+ignore_dirs[i]+'/**']); }
     return patterns;
+};
+
+ConcatRedefine.prototype.get_app_by_path = function(path) {
+    var path_list = _.map(path.split('/'), function (item) {
+        for (var i in this.opts.modules_prefix) { item = item.replace(this.opts.modules_prefix[i], ''); }
+        return item;
+    }, this);
+    for (var i in path_list) { if (path_list[i] in this.files) return path_list[i]; }
+    return false;
 };
 
 module.exports = ConcatRedefine;
