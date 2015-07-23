@@ -149,7 +149,7 @@ Default: `['node_modules', 'bower_components']`
 
 
 ### options.ignore_modules
-Specified applications will be ignored for `options.modules_dir` directory.
+Specified applications will be ignored for `options.ignore_modules` directory.
 
 Type: `Array`
 
@@ -236,6 +236,7 @@ var cr = new ConcatRedefine({
         modules_dir: '../modules/',
         corm: false,
         ignore_dirs: ['node_modules', 'bower_components', 'tests', '_build', 'plugins', 'lib'],
+        ignore_modules: ['my_module_name'],
         modules_prefix: ['django-', 'pyramid_'],
         type: 'css'
     });
