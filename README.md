@@ -18,31 +18,31 @@ $ npm install gulp-concat-redefine --save-dev
 
 ```
 modules/
-   ├── bar/
-   │   └── css/
-   │       ├── bar.css
-   │       └── bar-menu.css
-   └── baz/
-       └── css/
-           └── baz.css
+  ├── bar/
+  │   └── css/
+  │       ├── bar.css
+  │       └── bar-menu.css
+  └── baz/
+      └── css/
+          └── baz.css
 
 project/
-    ├── gulpfile.js
-    ├── apps/
-    │   ├── foo/
-    │   │   └── css/
-    │   │       ├── foo.css
-    │   │       └── foo-title.css
-    │   └── baz/
-    │       └── css/
-    │           └── custom.css
-    └── static/
-        ├── foo/
-        │   └── css/
-        │       └── foo-title.css
-        └── bar/
-            └── css/
-                └── bar.css
+  ├── gulpfile.js
+  ├── apps/
+  │   ├── foo/
+  │   │   └── css/
+  │   │       ├── foo.css
+  │   │       └── foo-title.css
+  │   └── baz/
+  │       └── css/
+  │           └── custom.css
+  └── static/
+      ├── foo/
+      │   └── css/
+      │       └── foo-title.css
+      └── bar/
+          └── css/
+              └── bar.css
 ```
 
 ## gulpfile.js
@@ -58,11 +58,11 @@ var cr = new ConcatRedefine({
 });
 
 gulp.task('css', function() {
-    for (var app_name in cr.files) {
-        gulp.src(cr.files[app_name])
-            .pipe(concat(cr.get_target(app_name)))
-            .pipe(gulp.dest(cr.get_dest(app_name)));
-    }
+  for (var app_name in cr.files) {
+    gulp.src(cr.files[app_name])
+      .pipe(concat(cr.get_target(app_name)))
+      .pipe(gulp.dest(cr.get_dest(app_name)));
+  }
 });
 ```
 in `cr.files` stored object with files:
@@ -228,32 +228,31 @@ Type: `Array`
 ```js
 var gulp = require('gulp');
 var concat = require('gulp-concat');
-var minifyCSS = require('gulp-minify-css');
 var watch = require('gulp-watch');
 var ConcatRedefine = require('gulp-concat-redefine');
+
 var cr = new ConcatRedefine({
-        directories: ['./static/', './apps/'],
-        modules_dir: '../modules/',
-        corm: false,
-        ignore_dirs: ['node_modules', 'bower_components', 'tests', '_build', 'plugins', 'lib'],
-        modules_prefix: ['django-', 'pyramid_'],
-        type: 'css'
-    });
+  directories: ['./static/', './apps/'],
+  modules_dir: '../modules/',
+  corm: false,
+  ignore_dirs: ['node_modules', 'bower_components', 'tests', '_build', 'plugins', 'lib'],
+  modules_prefix: ['django-', 'pyramid_'],
+  type: 'css'
+});
 
 gulp.task('css', function() {
-    for (var app_name in cr.get_files()) {
-        gulp.src(cr.files[app_name])
-            .pipe(minifyCSS())
-            .pipe(concat(cr.get_target(app_name)))
-            .pipe(gulp.dest(cr.get_dest(app_name)));
-    }
+  for (var app_name in cr.get_files()) {
+    gulp.src(cr.files[app_name])
+      .pipe(concat(cr.get_target(app_name)))
+      .pipe(gulp.dest(cr.get_dest(app_name)));
+  }
 });
 
 
 gulp.task('watch', function() {
-    watch(cr.get_watch_patterns(), { verbose: true }, function () {
-        gulp.start('css');
-    });
+  watch(cr.get_watch_patterns(), { verbose: true }, function () {
+    gulp.start('css');
+  });
 });
 ```
 

@@ -1,6 +1,6 @@
-/coverage
-npm-debug.log
-node_modules
-__*.*
 *.sublime-project
 *.sublime-workspace
+/coverage
+__*.*
+node_modules
+npm-debug.log
