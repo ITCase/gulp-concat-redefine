@@ -1,17 +1,12 @@
-/* jslint node: true */
+'use strict';
 
-"use strict";
-
-
-var globby = require("globby"),
-    // join = require('path').join,
+var globby = require('globby'),
     gutil = require('gulp-util'),
     PlError = gutil.PluginError,
     _ = require('lodash');
 
 var PL_NAME = 'gulp-concat-redefine',
     _check_list = [];
-
 
 function _check_options(opts) {
     opts = opts || {};
@@ -155,8 +150,13 @@ ConcatRedefine.prototype.get_watch_patterns = function() {
     var dirs = this.opts.directories;
 
     if (dirs.indexOf(md) + 1 === 0) dirs.push(md);
-    var patterns = _.map(dirs, function(p) {return p+'**/*.'+type; }).concat(['!**/__*.'+type, '!'+md+'**/__*.'+type]);
-    for (var i in ignore_dirs) patterns = patterns.concat(['!**/'+ignore_dirs[i]+'/**', '!'+md+'**/'+ignore_dirs[i]+'/**']);
+    var patterns = _.map(dirs, function(p) { return p+'**/*.'+type }).concat(['!**/__*.'+type, '!'+md+'**/__*.'+type]);
+    for (var i in ignore_dirs) {
+        patterns = patterns.concat([
+            '!**/'+ignore_dirs[i]+'/**',
+            '!'+md+'**/'+ignore_dirs[i]+'/**'
+        ]);
+    }
     return patterns;
 };
 
