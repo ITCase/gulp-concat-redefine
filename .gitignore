@@ -2,5 +2,6 @@
 *.sublime-workspace
 /coverage
 __*.*
+*.DS_Store
 node_modules
 npm-debug.log
