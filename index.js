@@ -72,18 +72,26 @@ ConcatRedefine.prototype._get_files = function(dir) {
     var appName = folder.match(/.+\/(.+)\/$/)[1];
     var patterns = [dir+appName+files_pattern, '!'+dir+appName+ignore_pattern];
 
-    // if(appName.indexOf(modules_prefix) + 1 === 0) {
-    //   return
-    // }
-
     for (var i in ignore_dirs) {
       patterns.push('!'+dir+'**/'+ignore_dirs[i]+'/**');
     }
 
     if (dir === this.opts.modules_dir) {
       if (this.opts.ignore_modules.indexOf(appName) + 1) return;
-      for (i in this.opts.modules_prefix) {
-        appName = appName.replace(this.opts.modules_prefix[i], '');
+
+      // TODO: this ugly
+      var is_module = false;
+      for (i in modules_prefix) {
+        if(appName.indexOf(modules_prefix[i])+1) {
+          is_module = true;
+          break;
+        }
+      }
+      if (!(is_module)) { return; }
+      // -----
+
+      for (i in modules_prefix) {
+        appName = appName.replace(modules_prefix[i], '');
       }
       if (this.opts.corm && !(appName in this.files)) return;
     }
@@ -108,9 +116,7 @@ ConcatRedefine.prototype._get_files = function(dir) {
 ConcatRedefine.prototype.get_files = function() {
   this.files = {};
   var dirs = this.opts.directories;
-  for (var i in dirs) {
-    this._get_files(dirs[i]);
-  }
+  for (var i in dirs) { this._get_files(dirs[i]); }
   _check_list = [];
   return this.files;
 };
