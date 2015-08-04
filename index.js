@@ -194,8 +194,12 @@ ConcatRedefine.prototype.get_app_by_path = function(path) {
     return item;
   }, this);
   for (var i in path_list) {
-    if (path_list[i] in this.files){
-      return path_list[i];
+    var appName = path_list[i];
+    if (appName === this.opts.type) {
+      appName = 'main';
+    }
+    if (appName in this.files) {
+      return appName;
     }
   }
   return false;
