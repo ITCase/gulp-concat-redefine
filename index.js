@@ -92,7 +92,6 @@ ConcatRedefine.prototype._get_files = function (dir) {
     dir += '/'
   }
 
-
   globby.sync(dir + '*/').forEach(function (folder) {
     var appName = folder.match(/.+\/(.+)\/$/)[1]
     var patterns = [
@@ -103,7 +102,6 @@ ConcatRedefine.prototype._get_files = function (dir) {
     for (var i in ignore_dirs) {
       patterns.push('!' + dir + '**/' + ignore_dirs[i] + '/**')
     }
-
 
     if (dir === this.opts.modules_dir) {
       if (this.opts.ignore_modules.indexOf(appName) + 1) {
@@ -213,7 +211,7 @@ ConcatRedefine.prototype.get_watch_patterns = function () {
   var type = this.opts.type
   var md = this.opts.modules_dir
   var ignore_dirs = this.opts.ignore_dirs
-  var dirs = this.opts.directories
+  var dirs = this.opts.directories.slice()
   var modules_prefixes = this.opts.modules_prefix
 
   if (dirs.indexOf(md) + 1) {

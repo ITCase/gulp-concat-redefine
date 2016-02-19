@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.0.16 (17/02/2016)
+------------------
+* Fix remove last option in list (dir array)
+
 0.0.13 (17/02/2016)
 ------------------
 * Convert md > rst
