@@ -127,8 +127,11 @@ ConcatRedefine.prototype._get_files = function (dir) {
       if (this.opts.corm && !(appName in this.files)) {
         return
       }
+    } else {
+      for (i in modules_prefix) {
+        appName = appName.replace(modules_prefix[i], '')
+      }
     }
-
 
     var module_files = globby.sync(patterns)
     var clean_module_files = _clean_files(module_files, appName)
