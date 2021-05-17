@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.18 (17/05/2021)
+Fix reserved words
+
 ## 0.0.16 (17/02/2016)
 Fix remove last option in list
 
