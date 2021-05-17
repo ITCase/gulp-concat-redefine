@@ -140,7 +140,7 @@ ConcatRedefine.prototype._get_files = function (dir) {
       if (appName === type) {
         appName = 'main'
       }
-      if (!(appName in this.files)) {
+      if (!Array.isArray(this.files[appName])) {
         this.files[appName] = []
       }
 
