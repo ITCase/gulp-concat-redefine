@@ -1,6 +1,26 @@
 {
-  "extends": "standard",
+  "extends": [
+    "standard",
+    "prettier"
+  ],
+  "plugins": [
+    "import",
+    "prettier",
+    "standard"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false,
+  },
   "env": {
-    "mocha": true
+    "es6": true,
+    "mocha": true,
+    "node": true
+  },
+  "rules": {
+    "import/no-webpack-loader-syntax": "off",
+    "multiline-ternary": "off",
+    "prettier/prettier": "error"
   }
 }

@@ -1,32 +1,32 @@
 'use strict'
 
-var _ = require('lodash')
-var globby = require('globby')
-var gutil = require('gulp-util')
-var PlError = gutil.PluginError
+const _ = require('lodash')
+const globby = require('globby')
+const gutil = require('gulp-util')
+const PlError = gutil.PluginError
 
-var PL_NAME = 'gulp-concat-redefine'
-var _check_list = []
+const PLUGIN_NAME = 'gulp-concat-redefine'
+let _checkList = []
 
-function _check_options (opts) {
+function _checkOptions(opts) {
   opts = opts || {}
 
   if (!opts.directories) {
-    throw new PlError(PL_NAME, 'Missing "directories" option')
+    throw new PlError(PLUGIN_NAME, 'Missing "directories" option')
   } else if (!Array.isArray(opts.directories)) {
-    throw new PlError(PL_NAME, '"directories" should be Array')
+    throw new PlError(PLUGIN_NAME, '"directories" should be Array')
   }
 
   if (!opts.type) {
-    throw new PlError(PL_NAME, 'Missing "type" option')
+    throw new PlError(PLUGIN_NAME, 'Missing "type" option')
   } else if (typeof opts.type !== 'string') {
-    throw new PlError(PL_NAME, '"type" should be String')
+    throw new PlError(PLUGIN_NAME, '"type" should be String')
   }
 
   if (!opts.modules_dir) {
     opts.modules_dir = _.last(opts.directories)
   } else if (typeof opts.modules_dir !== 'string') {
-    throw new PlError(PL_NAME, '"modules_dir" should be String')
+    throw new PlError(PLUGIN_NAME, '"modules_dir" should be String')
   } else if (!(opts.modules_dir in opts.directories)) {
     opts.directories.push(opts.modules_dir)
   }
@@ -35,133 +35,132 @@ function _check_options (opts) {
     opts.corm = true // collect only redefined modules
   }
 
-  if (!opts.ignore_dirs) {
-    opts.ignore_dirs = ['node_modules', 'bower_components', 'tests', 'vendor']
-  } else if (!Array.isArray(opts.ignore_dirs)) {
-    throw new PlError(PL_NAME, '"ignore_dirs" should be Array')
+  if (!opts.ignoreDirs) {
+    opts.ignoreDirs = ['node_modules', 'bower_components', 'tests', 'vendor']
+  } else if (!Array.isArray(opts.ignoreDirs)) {
+    throw new PlError(PLUGIN_NAME, '"ignoreDirs" should be Array')
   }
 
   if (!opts.ignore_modules) {
     opts.ignore_modules = []
   } else if (!Array.isArray(opts.ignore_modules)) {
-    throw new PlError(PL_NAME, '"ignore_modules" should be Array')
+    throw new PlError(PLUGIN_NAME, '"ignore_modules" should be Array')
   }
 
-  if (!opts.modules_prefix) {
-    opts.modules_prefix = ['']
-  } else if (typeof opts.modules_prefix === 'string') {
-    opts.modules_prefix = [opts.modules_prefix]
-  } else if (!Array.isArray(opts.modules_prefix)) {
-    throw new PlError(PL_NAME, '"modules_prefix" should be String or Array')
+  if (!opts.modulesPrefix) {
+    opts.modulesPrefix = ['']
+  } else if (typeof opts.modulesPrefix === 'string') {
+    opts.modulesPrefix = [opts.modulesPrefix]
+  } else if (!Array.isArray(opts.modulesPrefix)) {
+    throw new PlError(PLUGIN_NAME, '"modulesPrefix" should be String or Array')
   }
 
   if (!opts.target_prefix) {
     opts.target_prefix = '__'
   } else if (typeof opts.target_prefix !== 'string') {
-    throw new PlError(PL_NAME, '"target_prefix" should be String')
+    throw new PlError(PLUGIN_NAME, '"target_prefix" should be String')
   }
 
   return opts
 }
 
-var ConcatRedefine = function (opts, collect_files) {
+const ConcatRedefine = function (opts, collectFiles) {
   if (!(this instanceof ConcatRedefine)) {
     return new ConcatRedefine(opts)
   }
-  this.opts = _check_options(opts)
-  if (collect_files) {
+  this.opts = _checkOptions(opts)
+  if (collectFiles) {
     this.get_files()
   }
 }
 
-function _clean_files (files_list, app_name) {
-  return _.map(files_list, function (file_path) {
-    var path_list = file_path.split('/')
-    return app_name + '/' + _.drop(path_list, path_list.length - 2).join('/')
+function _cleanFiles(filesList, appName) {
+  return _.map(filesList, (filePath) => {
+    const pathList = filePath.split('/')
+    return appName + '/' + _.drop(pathList, pathList.length - 2).join('/')
   })
 }
 
 ConcatRedefine.prototype._get_files = function (dir) {
-  var type = this.opts.type
-  var ignore_dirs = this.opts.ignore_dirs
-  var files_pattern = '/**/*.' + type
-  var ignore_pattern = '/**/' + this.opts.target_prefix + '*.*'
-  var modules_prefix = this.opts.modules_prefix
+  const type = this.opts.type
+  const ignoreDirs = this.opts.ignoreDirs
+  const filesPattern = '/**/*.' + type
+  const ignorePattern = '/**/' + this.opts.target_prefix + '*.*'
+  const modulesPrefix = this.opts.modulesPrefix
 
-  if (!(_.endsWith(dir, '/'))) {
+  if (!_.endsWith(dir, '/')) {
     dir += '/'
   }
 
-  globby.sync(dir + '*/').forEach(function (folder) {
-    var appName = folder.match(/.+\/(.+)\/$/)[1]
-    var patterns = [
-      dir + appName + files_pattern,
-      '!' + dir + appName + ignore_pattern
-    ]
+  globby.sync(dir + '*/').forEach(
+    function (folder) {
+      let appName = folder.match(/.+\/(.+)\/$/)[1]
+      const patterns = [dir + appName + filesPattern, '!' + dir + appName + ignorePattern]
 
-    for (var i in ignore_dirs) {
-      patterns.push('!' + dir + '**/' + ignore_dirs[i] + '/**')
-    }
-
-    if (dir === this.opts.modules_dir) {
-      if (this.opts.ignore_modules.indexOf(appName) + 1) {
-        return
+      for (const i in ignoreDirs) {
+        patterns.push('!' + dir + '**/' + ignoreDirs[i] + '/**')
       }
 
-      // TODO: this ugly
-      var is_module = false
-      for (i in modules_prefix) {
-        if (appName.indexOf(modules_prefix[i]) + 1) {
-          is_module = true
-          break
+      if (dir === this.opts.modules_dir) {
+        if (this.opts.ignore_modules.indexOf(appName) + 1) {
+          return
+        }
+
+        // TODO: this ugly
+        let isModule = false
+        for (const i in modulesPrefix) {
+          if (appName.indexOf(modulesPrefix[i]) + 1) {
+            isModule = true
+            break
+          }
+        }
+        if (!isModule) {
+          return
+        }
+        // -----
+
+        for (const i in modulesPrefix) {
+          appName = appName.replace(modulesPrefix[i], '')
+        }
+        if (this.opts.corm && !(appName in this.files)) {
+          return
+        }
+      } else {
+        for (const i in modulesPrefix) {
+          appName = appName.replace(modulesPrefix[i], '')
         }
       }
-      if (!(is_module)) {
+
+      const moduleFiles = globby.sync(patterns)
+      const cleanModuleFiles = _cleanFiles(moduleFiles, appName)
+
+      if (!moduleFiles.length) {
         return
       }
-      // -----
-
-      for (i in modules_prefix) {
-        appName = appName.replace(modules_prefix[i], '')
+      if (appName === type) {
+        appName = 'main'
       }
-      if (this.opts.corm && !(appName in this.files)) {
-        return
+      if (!(appName in this.files)) {
+        this.files[appName] = []
       }
-    } else {
-      for (i in modules_prefix) {
-        appName = appName.replace(modules_prefix[i], '')
+
+      for (const i in cleanModuleFiles) {
+        if (_checkList.indexOf(cleanModuleFiles[i]) + 1 === 0) {
+          this.files[appName].push(moduleFiles[i])
+          _checkList.push(cleanModuleFiles[i])
+        }
       }
-    }
-
-    var module_files = globby.sync(patterns)
-    var clean_module_files = _clean_files(module_files, appName)
-
-    if (!module_files.length) {
-      return
-    }
-    if (appName === type) {
-      appName = 'main'
-    }
-    if (!(appName in this.files)) {
-      this.files[appName] = []
-    }
-
-    for (i in clean_module_files) {
-      if (_check_list.indexOf(clean_module_files[i]) + 1 === 0) {
-        this.files[appName].push(module_files[i])
-        _check_list.push(clean_module_files[i])
-      }
-    }
-  }.bind(this))
+    }.bind(this)
+  )
 }
 
 ConcatRedefine.prototype.get_files = function () {
   this.files = {}
-  var dirs = this.opts.directories
-  for (var i in dirs) {
+  const dirs = this.opts.directories
+  for (const i in dirs) {
     this._get_files(dirs[i])
   }
-  _check_list = []
+  _checkList = []
   return this.files
 }
 
@@ -169,27 +168,27 @@ ConcatRedefine.prototype.get_all_files = function () {
   return _.flattenDeep(_.values(this.files))
 }
 
-ConcatRedefine.prototype._get_default_dest = function (dirs, first_file) {
-  for (var i in dirs) {
-    if (first_file.indexOf(dirs[i]) + 1) return dirs[i]
-    else if (first_file.indexOf(this.opts.modules_dir) + 1) return this.opts.modules_dir
+ConcatRedefine.prototype._get_default_dest = function (dirs, firstFile) {
+  for (const i in dirs) {
+    if (firstFile.indexOf(dirs[i]) + 1) return dirs[i]
+    else if (firstFile.indexOf(this.opts.modules_dir) + 1) return this.opts.modules_dir
   }
   return dirs[0]
 }
 
 ConcatRedefine.prototype.get_dest = function (key) {
   if (key === undefined) {
-    throw new PlError(PL_NAME, 'Missing "key" argument!')
+    throw new PlError(PLUGIN_NAME, 'Missing "key" argument!')
   }
-  var files = this.files[key]
-  var dest = this._get_default_dest(this.opts.directories, files[0])
-  var type = this.opts.type
+  const files = this.files[key]
+  let dest = this._get_default_dest(this.opts.directories, files[0])
+  const type = this.opts.type
 
   // if (files.length) {}
-  var dest_dir = files[0].split('/')
-  if (dest_dir.indexOf(type) + 1) {
-    while (type !== dest_dir[dest_dir.length - 1]) dest_dir.pop()
-    dest = dest_dir.join('/') + '/'
+  const destDirectory = files[0].split('/')
+  if (destDirectory.indexOf(type) + 1) {
+    while (type !== destDirectory[destDirectory.length - 1]) destDirectory.pop()
+    dest = destDirectory.join('/') + '/'
   } else {
     dest = dest + key + '/' // create a type dir?
   }
@@ -198,62 +197,64 @@ ConcatRedefine.prototype.get_dest = function (key) {
 
 ConcatRedefine.prototype.get_target = function (key) {
   if (key === undefined) {
-    throw new PlError(PL_NAME, 'Missing "key" argument!')
+    throw new PlError(PLUGIN_NAME, 'Missing "key" argument!')
   }
   return this.opts.target_prefix + key + '.' + this.opts.type
 }
 
 ConcatRedefine.prototype.get_all_targets = function () {
-  return _.map(_.keys(this.files), function (key) {
-    return this.get_dest(key) + this.get_target(key)
-  }, this)
+  return _.map(
+    _.keys(this.files),
+    function (key) {
+      return this.get_dest(key) + this.get_target(key)
+    },
+    this
+  )
 }
 
 // TODO: make ignore patterns for all directories(personaly)
 ConcatRedefine.prototype.get_watch_patterns = function () {
-  var type = this.opts.type
-  var md = this.opts.modules_dir
-  var ignore_dirs = this.opts.ignore_dirs
-  var dirs = this.opts.directories.slice()
-  var modules_prefixes = this.opts.modules_prefix
+  const type = this.opts.type
+  const md = this.opts.modules_dir
+  const ignoreDirs = this.opts.ignoreDirs
+  const dirs = this.opts.directories.slice()
+  const modulesPrefixes = this.opts.modulesPrefix
 
   if (dirs.indexOf(md) + 1) {
     // dirs.push(md)
     dirs.splice(dirs.indexOf(md), 1)
   }
-  var patterns = _.map(dirs, function (p) {
+  let patterns = _.map(dirs, (p) => {
     return p + '**/*.' + type
   })
 
-  var modules_patterns = []
-  for (var i in modules_prefixes) {
-    modules_patterns.push(md + modules_prefixes[i] + '*/**/*.' + type)
-    modules_patterns.push(md + modules_prefixes[i] + '*/*.' + type)
+  const modulesPatterns = []
+  for (const i in modulesPrefixes) {
+    modulesPatterns.push(md + modulesPrefixes[i] + '*/**/*.' + type)
+    modulesPatterns.push(md + modulesPrefixes[i] + '*/*.' + type)
   }
-  patterns = patterns.concat(modules_patterns)
-  patterns = patterns.concat([
-    '!**/__*.' + type,
-    '!' + md + '**/__*.' + type
-  ])
+  patterns = patterns.concat(modulesPatterns)
+  patterns = patterns.concat(['!**/__*.' + type, '!' + md + '**/__*.' + type])
 
-  for (i in ignore_dirs) {
+  for (const i in ignoreDirs) {
     patterns = patterns.concat([
-      '!**/' + ignore_dirs[i] + '/**',
-      '!' + md + '**/' + ignore_dirs[i] + '/**'])
+      '!**/' + ignoreDirs[i] + '/**',
+      '!' + md + '**/' + ignoreDirs[i] + '/**',
+    ])
   }
   return patterns
 }
 
 ConcatRedefine.prototype.get_app_by_path = function (path) {
-  var modules_prefixes = this.opts.modules_prefix
-  var path_list = _.map(path.split('/'), function (item) {
-    for (var i in modules_prefixes) {
-      item = item.replace(modules_prefixes[i], '')
+  const modulesPrefixes = this.opts.modulesPrefix
+  const pathList = _.map(path.split('/'), function (item) {
+    for (const i in modulesPrefixes) {
+      item = item.replace(modulesPrefixes[i], '')
     }
     return item
   })
-  for (var i in path_list) {
-    var appName = path_list[i]
+  for (const i in pathList) {
+    let appName = pathList[i]
     if (appName === this.opts.type) {
       appName = 'main'
     }
